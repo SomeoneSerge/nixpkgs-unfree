@@ -38,19 +38,12 @@
       # But replace legacyPackages with the unfree version
       legacyPackages = eachSystem (system: x.${system}.legacyPackages);
 
-      # OLD:
-      # # And load all the unfree+redistributable packages as checks
-      # checks = eachSystem (system: x.${system}.checks);
-      #
-      # NEW: hide the attribute for nix flake show not to die
+      # And load all the unfree+redistributable packages as checks
+      checks = eachSystem (system: x.${system}.checks);
 
       # Expose our own unfree overrides
       overlay = ./overlay.nix;
 
-      herculesCI = { ... }: {
-        onPush.default = {
-          outputs = self.checks;
-        };
-      };
+      herculesCI = { ... }: { };
     };
 }
