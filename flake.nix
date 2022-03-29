@@ -49,9 +49,7 @@
 
       herculesCI = { ... }: {
         onPush.default = {
-          outputs = { ... }: {
-            nixpkgs-unfree = self.checks;
-          };
+          outputs = self.checks;
         };
       };
     };
