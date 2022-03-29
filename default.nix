@@ -46,45 +46,77 @@ let
     hasLicense pkg &&
     isUnfreeRedistributable (lib.lists.toList pkg.meta.license);
 
-  /* Return an attribute from a nested attribute set.
-
-    Example:
-    x = {a = { b = 3; }; }
-    getAttr "a.b" x
-    => 3
-    getAttr "a.floo" x
-  */
-  getAttr = attrPath:
-    let
-      attrPath_ = lib.filter lib.isString (builtins.split "\\\." attrPath);
-    in
-    lib.attrByPath attrPath_ (abort "cannot find attribute `" + attrPath "'")
-  ;
-
   configs = import ./configs.nix;
   nixpkgsInstances = lib.mapAttrs
-    (name: config: import inputs.nixpkgs ({ inherit system; } // config))
+    (configName: config: import inputs.nixpkgs ({ inherit system; } // config))
     configs;
+  supportedPackages = lib.mapAttrs (cfgName: pkgs: packagesWith "" (_: _: true) pkgs) nixpkgsInstances;
 
-  unfreeRedistributablePackages = lib.mapAttrs
-    (name: pkgs: packagesWith
-      ""
-      (name: pkg: hasUnfreeRedistributableLicense pkg)
-      pkgs)
-    nixpkgsInstances;
+  extraPackages = [
+    [ "blas" ]
+    [ "cudatool]kit" ]
+    [ "lapack" ]
+    [ "mpich" ]
+    [ "openmpi" ]
+    [ "ucx" ]
+    [ "blender" ]
+    [ "colmapWithCuda" ]
+  ];
 
-  extraChecks = lib.mapAttrs
-    (name: pkgs: map
-      (name: lib.nameValuePair (lib.replaceStrings [ "." ] [ "_" ] name) (getAttr name pkgs))
-      pkgs.extraChecks)
-    nixpkgsInstances;
+  pythonAttrs =
+    let
+      matrix = lib.cartesianProductOfSets
+        {
+          pkg = [
+            "opencv"
+            "jaxlib"
+            "pytorch"
+            "tensorflowWithCuda"
+          ];
+          ps = [
+            "python38Packages"
+            "python39Packages"
+            "python310Packages"
+          ];
+        };
+
+      mkPath = { pkg, ps }: [ ps pkg ];
+    in
+    builtins.map
+      mkPath
+      matrix;
+
+  checks =
+    let
+      matrix = lib.cartesianProductOfSets
+        {
+          cfg = builtins.attrNames configs;
+          path = extraPackages ++ pythonAttrs;
+        };
+      maybeSupported = builtins.map
+        ({ cfg, path }:
+          let
+            jobName = lib.concatStringsSep "_" ([ cfg ] ++ path);
+            mbPackage = lib.attrByPath path [ ] supportedPackages.${cfg};
+          in
+          { inherit jobName mbPackage; })
+        matrix;
+      nonempty = builtins.concatMap
+        ({ jobName, mbPackage }:
+          if mbPackage == [ ]
+          then [ ]
+          else [{ inherit jobName; package = builtins.head mbPackage; }])
+        maybeSupported;
+      kvPairs = builtins.map
+        ({ jobName, mbPackage }: lib.nameValuePair jobName mbPackage)
+        nonempty;
+    in
+    lib.listToAttrs kvPairs;
 in
 {
   # Export the whole tree
   legacyPackages = nixpkgsInstances.vanilla;
 
   # Returns the recursive set of unfree but redistributable packages as checks
-  checks = lib.mapAttrs
-    (name: _: lib.listToAttrs (unfreeRedistributablePackages.${name} ++ extraChecks.${name}))
-    nixpkgsInstances;
+  inherit checks;
 }
