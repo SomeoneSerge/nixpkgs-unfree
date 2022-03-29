@@ -30,6 +30,10 @@
           enableCuda = true;
         };
 
+        suitesparse = prev.suitesparse.override {
+          enableCuda = true;
+        };
+
         blas = prev.blas.override {
           blasProvider = final.mkl;
         };

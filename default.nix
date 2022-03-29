@@ -50,9 +50,17 @@ let
       matrix = lib.cartesianProductOfSets
         {
           pkg = [
-            "opencv"
+            "caffe"
+            "chainer"
             "jaxlib"
+            "Keras"
+            "libgpuarray"
+            "mxnet"
+            "opencv"
             "pytorch"
+            "pyrealsense2WithCuda"
+            "torchvision"
+            "TheanoWithCuda"
             "tensorflowWithCuda"
           ];
           ps = [
