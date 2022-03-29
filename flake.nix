@@ -44,6 +44,10 @@
       # Expose our own unfree overrides
       overlay = ./overlay.nix;
 
-      herculesCI = { ... }: { };
+      herculesCI = { ... }: {
+        onPush.default = {
+          outputs = self.checks;
+        };
+      };
     };
 }
