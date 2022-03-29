@@ -38,8 +38,11 @@
       # But replace legacyPackages with the unfree version
       legacyPackages = eachSystem (system: x.${system}.legacyPackages);
 
-      # And load all the unfree+redistributable packages as checks
-      checks = eachSystem (system: x.${system}.checks);
+      # OLD:
+      # # And load all the unfree+redistributable packages as checks
+      # checks = eachSystem (system: x.${system}.checks);
+      #
+      # NEW: hide the attribute for nix flake show not to die
 
       # Expose our own unfree overrides
       overlay = ./overlay.nix;
