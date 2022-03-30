@@ -46,6 +46,8 @@ let
     [ "ucx" ]
     [ "blender" ]
     [ "colmapWithCuda" ]
+    [ "suitesparse" ]
+    [ "cholmod-extra" ]
   ];
 
   pythonAttrs =
