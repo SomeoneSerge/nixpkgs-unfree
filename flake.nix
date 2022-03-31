@@ -14,20 +14,16 @@
 
   outputs = inputs@{ self, nixpkgs }:
     let
-      # OLD: Support the same list of systems as upstream.
-      # systems = lib.systems.supported.hydra; 
-      # NEW: Support only the platforms we have builders for
-      # ...otherwise hercules dashboard gets too noisy
-      systems = [ "x86_64-linux" "i686-linux" ];
 
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
+
+      systems = [ "x86_64-linux" ];
 
       eachSystem = lib.genAttrs systems;
 
       x = eachSystem (system:
         import ./. {
-          inherit system inputs;
-          lib = nixpkgs.lib;
+          inherit system inputs lib;
         }
       );
     in
@@ -47,7 +43,7 @@
       herculesCI = { ... }: {
         onPush.default.outputs = {
           defaultChecks = self.checks;
-          neverBreak = x."x86_64-linux".neverBreak;
+          neverBreak = x.x86_64-linux.neverBreak;
         };
       };
     };
