@@ -12,9 +12,9 @@ jobs:
       fail-fast: false
       matrix:
         branch:
-        - nixos-unstable
-        - nixpkgs-unstable
         - nixos-21.11
+        - nixpkgs-unstable
+        - master
 
     steps:
     - uses: actions/checkout@v2
