@@ -119,12 +119,15 @@ let
       let
         # removed packages (like cudatoolkit_6) are just aliases that `throw`:
         notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
-        cuPrefixae = [
-          "cudatoolkit"
+        # used to grep things by prefixae
+        # now want to keep the job list short
+        # without rewriting much stuff (so keep grepping, but filter by elem)
+        chosenCudaPackages = [
           "cudnn"
+          "cudatoolkit"
           "cutensor"
         ];
-        isCuPackage = name: package: (notRemoved package) && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
+        isCuPackage = name: package: (notRemoved package) && (builtins.elem name chosenCudaPackages);
         cuPackages = lib.filterAttrs isCuPackage pkgs;
         stablePython = "python39Packages";
         pyPackages = lib.genAttrs [
