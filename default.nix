@@ -48,6 +48,7 @@ let
     [ "colmapWithCuda" ]
     [ "suitesparse" ]
     [ "cholmod-extra" ]
+    [ "truecrack-cuda" ]
   ];
 
   pythonAttrs =
