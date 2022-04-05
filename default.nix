@@ -49,6 +49,8 @@ let
     [ "suitesparse" ]
     [ "cholmod-extra" ]
     [ "truecrack-cuda" ]
+    [ "ethminer-cuda" ]
+    [ "gpu-screen-recorder" ]
   ];
 
   pythonAttrs =
