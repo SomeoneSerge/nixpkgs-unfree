@@ -51,6 +51,7 @@ let
     [ "truecrack-cuda" ]
     [ "ethminer-cuda" ]
     [ "gpu-screen-recorder" ]
+    [ "xgboost" ]
   ];
 
   pythonAttrs =
