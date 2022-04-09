@@ -62,6 +62,7 @@ let
             "caffe"
             "chainer"
             "cupy"
+            "catboost"
             "jaxlib"
             "Keras"
             "libgpuarray"
@@ -74,7 +75,6 @@ let
             "TheanoWithCuda"
             "tensorflowWithCuda"
             "tensorflow-probability"
-
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
