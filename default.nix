@@ -92,13 +92,30 @@ let
       mkPath
       matrix;
 
+  hasFridhPR = nixpkgs: nixpkgs.cudaPackages ? "overrideScope'";
+
+  cudaPackages = lib.concatMap
+    (cfg:
+      let
+        nixpkgs = nixpkgsInstances.${cfg};
+        jobs = builtins.map
+          (pkg: {
+            inherit cfg; path = [ "cudaPackages" pkg ];
+          })
+          (builtins.attrNames (nixpkgs.cudaPackages));
+      in
+      if hasFridhPR nixpkgs then jobs else [ ]
+    )
+    (builtins.attrNames configs);
+
   checks =
     let
       matrix = lib.cartesianProductOfSets
         {
           cfg = builtins.attrNames configs;
           path = extraPackages ++ pythonAttrs;
-        };
+        }
+      ++ cudaPackages;
       supported = builtins.concatMap
         ({ cfg, path }:
           let
