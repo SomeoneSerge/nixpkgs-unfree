@@ -15,7 +15,6 @@ jobs:
         - nixos-21.11
         - nixpkgs-unstable
         - master
-        - staging
 
     steps:
     - uses: actions/checkout@v2
