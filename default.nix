@@ -69,12 +69,19 @@ let
             "mxnet"
             "opencv4"
             "pytorch"
+            "pytorch-lightning"
             "pycuda"
             "pyrealsense2WithCuda"
             "torchvision"
+            "jaxlib"
+            "jax"
+            "flax"
             "TheanoWithCuda"
             "tensorflowWithCuda"
             "tensorflow-probability"
+            # makes sure it's cached with MKL
+            "scikit-learn" 
+            "scikitimage"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
