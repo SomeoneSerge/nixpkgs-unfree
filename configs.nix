@@ -2,6 +2,7 @@
   vanilla = {
     config.allowUnfree = true;
     config.cudaSupport = true;
+    overlays = [ ];
   };
 
   mklCuda11 =
