@@ -3,6 +3,7 @@ let
     { isIntel ? false
     , cudaVersion ? null
     , cudnnVersion ? null
+    , qchemOverrides ? false
     }:
     final: prev:
     let
@@ -11,6 +12,7 @@ let
     (
       {
         # These ignore config.cudaSupport in some releases
+
         openmpi = prev.openmpi.override {
           cudaSupport = true;
         };
@@ -23,10 +25,11 @@ let
           enableCuda = true;
         };
 
+      } // optionalAttrs qchemOverrides {
+        # Instead of libfabric
         mpich = prev.mpich.override {
           ch4backend = final.ucx;
         };
-
       } // optionalAttrs isIntel {
         blas = prev.blas.override {
           blasProvider = final.mkl;
@@ -83,6 +86,11 @@ in
     config.allowUnfree = true;
     config.cudaSupport = true;
 
-    overlays = [ (prepareOverlay { isIntel = true; }) ];
+    overlays = [
+      (prepareOverlay {
+        isIntel = true;
+        qchemOverrides = true;
+      })
+    ];
   };
 }
