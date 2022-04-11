@@ -65,7 +65,7 @@ let
               });
             };
 
-          release = final.lib.nixpkgsVersion;
+          release = prev.lib.version;
           overlay =
             if versionOlder release "21.12" then "21.11"
             else if versionOlder release "22.06" then "22.05"
@@ -81,6 +81,12 @@ in
     config.cudaSupport = true;
 
     overlays = [ (prepareOverlay { }) ];
+  };
+  cuda_11_5 = {
+    config.allowUnfree = true;
+    config.cudaSupport = true;
+
+    overlays = [ (prepareOverlay { cudnnVersion = "8.3.2"; cudaVersion = "11.5"; }) ];
   };
   intel = {
     config.allowUnfree = true;
