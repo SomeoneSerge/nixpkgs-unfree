@@ -50,7 +50,8 @@ let
           cudnnAttr = versionToAttr cudnnVersion;
 
           overlays."21.11" =
-            assert (builtins.isNull cudnnVersion || cudnnVersion == final.cudnn.version);
+            # using prev in assert to avoid infinite recursion
+            assert (builtins.isNull cudnnVersion || cudnnVersion == prev."cudnn_cudatoolkit${cudaAttr}");
             {
               cudatoolkit_11 = final."cudatoolkit${cudaAttr}";
               cudatoolkit = final."cudatoolkit${cudaAttr}";
