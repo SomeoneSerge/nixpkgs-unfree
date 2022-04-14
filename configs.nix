@@ -8,7 +8,6 @@ let
       # the cuda or cudnn revision to set as the default
     , cudaVersion ? null
     , cudnnVersion ? null
-    , qchemOverrides ? false
       # *mpiProvider*
       #
       # : Maybe String
@@ -38,13 +37,14 @@ let
           enableCuda = true;
         };
 
-      } // optionalAttrs qchemOverrides {
+      } // optionalAttrs overrideMpi {
+        mpi = final.${mpiProvider};
+
         # Instead of libfabric
         mpich = prev.mpich.override {
           ch4backend = final.ucx;
         };
-      } // optionalAttrs overrideMpi {
-        mpi = final.${mpiProvider};
+
         # TODO: pythonPackageOverrides
         pytorchMpi = prev.python3Packages.pytorch.override {
           MPISupport = true;
@@ -119,7 +119,6 @@ in
     overlays = [
       (prepareOverlay {
         isIntel = true;
-        qchemOverrides = true;
       })
     ];
   };
