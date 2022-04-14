@@ -80,7 +80,7 @@ let
             "tensorflowWithCuda"
             "tensorflow-probability"
             # makes sure it's cached with MKL
-            "scikit-learn" 
+            "scikit-learn"
             "scikitimage"
           ] ++ [
             # These need to be rebuilt because of MKL
@@ -137,8 +137,16 @@ let
       kvPairs = builtins.map
         ({ jobName, package }: lib.nameValuePair jobName package)
         supported;
+
+      dedupOutpaths = nameDrvPairs:
+        let
+          outPathToPair = lib.groupBy (pair: (builtins.unsafeDiscardStringContext pair.value.outPath)) nameDrvPairs;
+          groupedPairs = builtins.attrValues outPathToPair;
+          uniquePairs = builtins.map builtins.head groupedPairs;
+        in
+        uniquePairs;
     in
-    lib.listToAttrs kvPairs;
+    lib.listToAttrs (dedupOutpaths kvPairs);
 
   # List packages that we never want to be even marked as "broken"
   # These will be checked just for x86_64-linux and for one release of python
@@ -173,7 +181,7 @@ let
 in
 {
   # Export the whole tree
-  legacyPackages = nixpkgsInstances.vanilla;
+  legacyPackages = nixpkgsInstances.basic;
 
   # Returns the recursive set of unfree but redistributable packages as checks
   inherit checks neverBreak;

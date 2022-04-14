@@ -38,7 +38,7 @@
       checks = eachSystem (system: x.${system}.checks);
 
       # Expose our own unfree overrides
-      overlay = builtins.head (import ./configs.nix).vanilla.overlays;
+      overlay = builtins.head (import ./configs.nix).basic.overlays;
 
       herculesCI = { ... }: {
         onPush.default.outputs = {

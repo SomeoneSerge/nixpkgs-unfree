@@ -77,7 +77,11 @@ let
     );
 in
 {
-  vanilla = {
+  # Lexicographic ordering of the names matters for the groupBy in default.nix
+  # Overrides that don't change the derivation (compared to basic)
+  # won't show up as attributes in the jobset
+  # (as long as config's name is lexicographically bigger than "basic")
+  basic = {
     config.allowUnfree = true;
     config.cudaSupport = true;
 
