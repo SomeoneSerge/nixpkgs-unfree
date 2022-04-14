@@ -36,7 +36,6 @@ let
 
   extraPackages = [
     [ "blas" ]
-    [ "cudatoolkit" ]
     [ "cudnn" ]
     [ "lapack" ]
     [ "mpich" ]
@@ -155,16 +154,20 @@ let
       let
         # removed packages (like cudatoolkit_6) are just aliases that `throw`:
         notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
-        # used to grep things by prefixae
-        # now want to keep the job list short
-        # without rewriting much stuff (so keep grepping, but filter by elem)
-        chosenCudaPackages = [
+
+        # Picking out the redist parts of cuda
+        # and specifically ignoring the runfile-based cudatoolkit
+        cuPrefixae = [
           "cudnn"
-          "cudatoolkit"
           "cutensor"
+          "cuda_"
+          "cuda-"
+          "lib"
+          "nccl"
+          "nsight"
         ];
-        isCuPackage = name: package: (notRemoved package) && (builtins.elem name chosenCudaPackages);
-        cuPackages = lib.filterAttrs isCuPackage pkgs;
+        isCuPackage = name: package: (notRemoved package) && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
+        cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
         stablePython = "python39Packages";
         pyPackages = lib.genAttrs [
           "pytorch"
