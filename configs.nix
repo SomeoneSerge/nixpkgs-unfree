@@ -1,13 +1,26 @@
 let
   prepareOverlay =
     { isIntel ? false
+      # cud(a|nn)Version
+      #
+      # : Maybe String
+      # Semver (<xx.yy> or <xx.yy.zz>) naming
+      # the cuda or cudnn revision to set as the default
     , cudaVersion ? null
     , cudnnVersion ? null
     , qchemOverrides ? false
+      # *mpiProvider*
+      #
+      # : Maybe String
+      # If null: don't touch mpi.
+      # If str: names the attribute providing mpi implementation
+      # and adds a few MPISupport=true overrides in selected packages
+    , mpiProvider ? null
     }:
     final: prev:
     let
       inherit (prev.lib) optionalAttrs versionOlder replaceChars;
+      overrideMpi = !(builtins.isNull mpiProvider);
     in
     (
       {
@@ -30,16 +43,22 @@ let
         mpich = prev.mpich.override {
           ch4backend = final.ucx;
         };
+      } // optionalAttrs overrideMpi {
+        mpi = final.${mpiProvider};
+        # TODO: pythonPackageOverrides
+        pytorchMpi = prev.python3Packages.pytorch.override {
+          MPISupport = true;
+        };
       } // optionalAttrs isIntel {
         blas = prev.blas.override {
           blasProvider = final.mkl;
         };
-
         lapack = prev.lapack.override {
           lapackProvider = final.mkl;
         };
-
-        # TODO: opencv: enable TBB
+        opencv = prev.opencv.override {
+          enableTbb = true;
+        };
       } //
       (
         let
@@ -101,6 +120,26 @@ in
       (prepareOverlay {
         isIntel = true;
         qchemOverrides = true;
+      })
+    ];
+  };
+  mpich = {
+    config.allowUnfree = true;
+    config.cudaSupport = true;
+
+    overlays = [
+      (prepareOverlay {
+        mpiProvider = "mpich";
+      })
+    ];
+  };
+  openmpi = {
+    config.allowUnfree = true;
+    config.cudaSupport = true;
+
+    overlays = [
+      (prepareOverlay {
+        mpiProvider = "openmpi";
       })
     ];
   };
