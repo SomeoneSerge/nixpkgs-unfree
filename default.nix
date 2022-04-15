@@ -18,6 +18,8 @@ let
         else [ ]
       );
     in if result.success then result.value else [ ];
+  # removed packages (like cudatoolkit_6) are just aliases that `throw`:
+  notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
 
   isUnfreeRedistributable = licenses:
     lib.lists.any (l: (!l.free or true) && (l.redistributable or false)) licenses;
@@ -28,6 +30,25 @@ let
   hasUnfreeRedistributableLicense = pkg:
     hasLicense pkg &&
     isUnfreeRedistributable (lib.lists.toList pkg.meta.license);
+
+  isDerivation = a: a ? type && a.type == "derivation";
+
+  # Picking out the redist parts of cuda
+  # and specifically ignoring the runfile-based cudatoolkit
+  cuPrefixae = [
+    "cudnn"
+    "cutensor"
+    "cuda_"
+    "cuda-"
+    "lib"
+    "nccl"
+    "nsight_systems"
+    "nsight_compute"
+  ];
+  isCuPackage = name: drv:
+    (notRemoved drv)
+    && (isDerivation drv)
+    && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
 
   configs = import ./configs.nix;
   nixpkgsInstances = lib.mapAttrs
@@ -108,7 +129,7 @@ let
           (pkg: {
             inherit cfg; path = [ "cudaPackages" pkg ];
           })
-          (builtins.attrNames (nixpkgs.cudaPackages));
+          (builtins.attrNames (lib.filterAttrs isCuPackage nixpkgs.cudaPackages));
       in
       if hasFridhPR nixpkgs then jobs else [ ]
     )
@@ -152,21 +173,6 @@ let
   neverBreak = lib.mapAttrs
     (cfgName: pkgs:
       let
-        # removed packages (like cudatoolkit_6) are just aliases that `throw`:
-        notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
-
-        # Picking out the redist parts of cuda
-        # and specifically ignoring the runfile-based cudatoolkit
-        cuPrefixae = [
-          "cudnn"
-          "cutensor"
-          "cuda_"
-          "cuda-"
-          "lib"
-          "nccl"
-          "nsight"
-        ];
-        isCuPackage = name: package: (notRemoved package) && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
         cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
         stablePython = "python39Packages";
         pyPackages = lib.genAttrs [
@@ -177,9 +183,7 @@ let
         ]
           (name: pkgs.${stablePython}.${name});
       in
-      {
-        inherit pyPackages;
-      } // cuPackages)
+      pyPackages // cuPackages)
     nixpkgsInstances;
 in
 {
