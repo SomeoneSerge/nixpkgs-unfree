@@ -106,12 +106,6 @@ in
 
     overlays = [ (prepareOverlay { }) ];
   };
-  cuda_11_5 = {
-    config.allowUnfree = true;
-    config.cudaSupport = true;
-
-    overlays = [ (prepareOverlay { cudnnVersion = "8.3.2"; cudaVersion = "11.5"; }) ];
-  };
   intel = {
     config.allowUnfree = true;
     config.cudaSupport = true;
