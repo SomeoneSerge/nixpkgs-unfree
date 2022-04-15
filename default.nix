@@ -170,21 +170,20 @@ let
 
   # List packages that we never want to be even marked as "broken"
   # These will be checked just for x86_64-linux and for one release of python
-  neverBreak = lib.mapAttrs
-    (cfgName: pkgs:
-      let
-        cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
-        stablePython = "python39Packages";
-        pyPackages = lib.genAttrs [
-          "pytorch"
-          "cupy"
-          "jaxlib"
-          "tensorflowWithCuda"
-        ]
-          (name: pkgs.${stablePython}.${name});
-      in
-      pyPackages // cuPackages)
-    nixpkgsInstances;
+  neverBreak =
+    let
+      pkgs = nixpkgsInstances.basic;
+      cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
+      stablePython = "python39Packages";
+      pyPackages = lib.genAttrs [
+        "pytorch"
+        "cupy"
+        "jaxlib"
+        "tensorflowWithCuda"
+      ]
+        (name: pkgs.${stablePython}.${name});
+    in
+    pyPackages // cuPackages;
 in
 {
   # Export the whole tree
