@@ -22,7 +22,7 @@
       eachSystem = lib.genAttrs systems;
 
       x = eachSystem (system:
-        import ./. {
+        import ./jobs.nix {
           inherit system inputs lib;
         }
       );
