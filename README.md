@@ -1,97 +1,124 @@
 # nixpkgs-unfree - nixpkgs with the unfree bits enabled
 
-**STATUS: alpha**
 
-The [nixpkgs](https://github.com/NixOS/nixpkgs) project contains package
-definitions for free and unfree packages but only builds free packages. This
-project is complementary. We're enabling the unfree bits and pushing those to
-our cache.  It also makes the flake use-case a bit easier to use.
+First, a word of warning: this is just a development repo that ought to be
+replaced with something sustainable later. For an up-to-date information about
+CUDA in nixpkgs seek in:
 
-Initially, this project spawned from the reflections drawn in and is now
-expanding to provide a wider set of features.
+- [#cuda:nixos.org](https://matrix.to/#/#cuda:nixos.org)
+- https://nixos.wiki/wiki/CUDA
+- https://nixos.org/manual/nixpkgs/unstable/#cuda
+- [discourse.nixos.org](https://discourse.nixos.org/t/announcing-the-nixos-cuda-maintainers-team-and-a-call-for-maintainers/)
 
-## Features
+With the above in mind, let's proceed.
 
-### Binary cache
+## What is this
 
-The CI is pushing build results to <https://nixpkgs-unfree.cachix.org>. The
-site provides instructions on adding the cache to your system.
+- This is a fork of @zimbatm's [nixpkgs-unfree](https://github.com/numtide/nixpkgs-unfree/)
+- It's used to build and cache [nixpkgs](https://github.com/NixOS/nixpkgs)
+  world with `cudaSupport = true`.
+  See the dashboard at: [https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree](https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree)
+  - This means you can use pre-built pytorch, tensorflow, jax and blender with Nix
+  - This also means that [we](https://github.com/orgs/NixOS/teams/cuda-maintainers) notice and can act when things break in development branches.
+    [We build](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/.github/workflows/sync.yml#L14):
 
-### CUDA / performance packages
+    - [`master`](https://github.com/NixOS/nixpkgs/tree/master/),
+    - [`nixos-unstable`](https://github.com/NixOS/nixpkgs/tree/nixos-unstable),
+    - [`nixpkgs-unstable`](https://github.com/NixOS/nixpkgs/tree/nixpkgs-unstable),
+    - and the last release, at the time of writing - `nixos-21.11`
 
-Some packages have been changed to use the better-performing proprietary
-libraries. Think MPI / Blas / Lapack / ...
+    All of them correspond to respective branches in this repo.
+    These branches are automatically maintained, they derive from current
+    [`develop`](https://github.com/SomeoneSerge/nixpkgs-unfree/tree/develop/), but
+    [update the lock file `flake.lock`](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/sync.sh#L26)
+- The builds run [once a day](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/.github/workflows/sync.yml#L5) so cache arrives with delays
+- The builds currently run on volunteers' machines.
+  We plan to soon make and maintain the exact list [on wiki](https://nixos.wiki/wiki/CUDA).
+  Each machine uses its own key to push the build results to cachix and these keys can be revoked
+  without breaking the whole chain.
+  You consume just one public key listed at https://cuda-maintainers.cachix.org/.
+  The cachix and cachix keys are currently managed by [@samuela](https://github.com/samuela/)
 
-To see the full list, look at the [overlay](./overlay.nix).
+  We hope one day to arrive at a more sustainable and trust-worthy solution,
+  but right now we're working on this as on a proof-of-concept.
 
-### Flake usage
+## How to use
 
-If your flake depends on unfree packages, please consider pointing it to this
-project to avoid creating more instances of nixpkgs. See
-<https://discourse.nixos.org/t/1000-instances-of-nixpkgs/17347> for a more
-in-depth explanation of the issue.
+- To use the cache, get [cachix](https://cachix.org/), and execute:
 
-Here is how you can replace your instance of nixpkgs with unfree packages
-enabled:
+  ```bash
+  cachix use cuda-maintainers
+  ```
+- To use the cache on NixOS, check the following snippet for your `configuration.nix` module:
 
-```nix
-{
-  inputs.nixpkgs.url = "github:numtide/nixpkgs-unfree";
-  inputs.nixpkgs.inputs.nixpkgs.follows = "github:NixOS/nixpkgs/nixos-unstable";
+  ```nix
+    nix.binaryCachePublicKeys = [
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    ];
+    nix.binaryCaches = [
+      "https://cuda-maintainers.cachix.org"
+    ];
+  ```
 
-  # Optionally, pull pre-built binaries from this project's cache
-  nixConfig.extra-substituters = [ "https://nixpkgs-unfree.cachix.org" ];
-  nixConfig.extra-trusted-public-keys = [ "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs=" ];
+  Verify that the public key comes from https://cuda-maintainers.cachix.org
+- You can also suggest the cache to users of your flake, with
 
-  outputs = { self, nixpkgs }: { ... };
-}
-```
+  ```nix
+    # ...
 
-Or, potentially, you might want to explicitly access unfree packages and have
-a separate instance:
+    nixConfig = {
+      extra-substituters = [
+        "https://cuda-maintainers.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      ];
+    };
 
-```nix
-{
-  # The main nixpkgs instance
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    outputs = { ... }: {
+      # ...
+    };
+  ```
 
-  # The unfree instance
-  inputs.nixpkgs-unfree.url = "github:numtide/nixpkgs-unfree";
-  inputs.nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
+  When interacting with your flake, the users would be asked whether they want to use that cache and trust that key.
+- The most consistent way to use cuda-enabled packages from nixpkgs is to import them with the global `config.cudaSupport`:
 
-  # Optionally, pull pre-built binaries from this project's cache
-  nixConfig.extra-substituters = [ "https://nixpkgs-unfree.cachix.org" ];
-  nixConfig.extra-trusted-public-keys = [ "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs=" ];
+  ```nix
+  pkgs = import nixpkgs { config.allowUnfree = true; config.cudaSupport = true; }
+  ```
 
-  outputs = { self, nixpkgs, nixpkgs-unfree }: { ... };
-}
-```
+  With that, `pkgs.python3Packages.jax`, `pkgs.python3Packages.pytorch`, etc evaluate into packages with cuda support.
+- This flake attempts to play a drop-in replacement (rather, a proxy) for `nixpkgs`.
+  The following usages are expected to work:
 
-### Nix run
+  - Executing `nix run github:SomeoneSerge/nixpkgs-unfree/nixpkgs-unstable#blender` to run blender built with cuda-support
+  - Using in flake inputs: 
 
-Thanks to this flake, it make it easy to run unfree packages. Eg:
+    ```nix
+    inputs.nixpkgs.url = github:NixOS/nixpkgs/nixpkgs-unstable;
+    inputs.nixpkgs-unfree.url = github:SomeoneSerge/nixpkgs-unfree;
+    inputs.nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
+    ```
+  - Using in flake inputs as a drop-in replacement for nixpkgs (unless someone does something special)
 
-```console
-$ nix run github:numtide/nixpkgs-unfree/nixos-unstable#slack
-```
+    ```nix
+    inputs.nixpkgs.url = github:SomeoneSerge/nixpkgs-unfree/nixpkgs-unstable;
+    inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    ```
+  - Importing as nixpkgs:
 
-See the "supported channels" section to find out which channels are being synched.
+    ```nix
+    inputs.nixpkgs = github:SomeoneSerge/nixpkgs-unfree/nixpkgs-unstable;
+    outputs = { nixpkgs }:
+    let
+      system = "x86_64-linux";
+      overlay = final: prev: { };
+      pkgs = import nixpkgs { overlays = [ overlay ]; };
+    in
+    {
+      # ...
+    }
+    ```
 
-## Supported channels
-
-FIXME: channel branches are currently force-pushed so they shouldn't be used as pinned sources.
-
-The following channels are updated daily (more in the future):
-
-* nixos-unstable
-* nixpkgs-unstable
-
-## Terms and Conditions
-
-All the code in this repository is published under the MIT and will always
-remain under an OSI-compliant license.
-
-The binary cache is available for free for non-commercial usage.
-
-If you're interested in supporting this project,
-[get in touch!](https://numtide.com/#contact).
+    Note that if you pass `config` in the arguments, you must again include `cudaSupport` and `allowUnfree`
+- If you're not enabling the cache globally, you might need to set `trusted-users = ${yourName}` in `/etc/nix/nix.conf`.
