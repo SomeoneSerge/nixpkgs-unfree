@@ -32,6 +32,9 @@ With the above in mind, let's proceed.
     [`develop`](https://github.com/SomeoneSerge/nixpkgs-unfree/tree/develop/), but
     [update the lock file `flake.lock`](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/sync.sh#L26)
 - The builds run [once a day](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/.github/workflows/sync.yml#L5) so cache arrives with delays
+- The cachix is limited in space and has garbage collection on. This means that
+  you'd need to stay up-to-date to benefit from the cache (as we build newer
+  packages, the old cache is eventually discarded)
 - The builds currently run on volunteers' machines.
   We plan to soon make and maintain the exact list [on wiki](https://nixos.wiki/wiki/CUDA).
   Each machine uses its own key to push the build results to cachix and these keys can be revoked
