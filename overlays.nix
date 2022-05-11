@@ -100,40 +100,18 @@ in
   # Overrides that don't change the derivation (compared to basic)
   # won't show up as attributes in the jobset
   # (as long as config's name is lexicographically bigger than "basic")
-  basic = {
-    config.allowUnfree = true;
-    config.cudaSupport = true;
 
-    overlays = [ (prepareOverlay { }) ];
+  basic = prepareOverlay { };
+
+  intel = prepareOverlay {
+    isIntel = true;
   };
-  intel = {
-    config.allowUnfree = true;
-    config.cudaSupport = true;
 
-    overlays = [
-      (prepareOverlay {
-        isIntel = true;
-      })
-    ];
+  mpich = prepareOverlay {
+    mpiProvider = "mpich";
   };
-  mpich = {
-    config.allowUnfree = true;
-    config.cudaSupport = true;
 
-    overlays = [
-      (prepareOverlay {
-        mpiProvider = "mpich";
-      })
-    ];
-  };
-  openmpi = {
-    config.allowUnfree = true;
-    config.cudaSupport = true;
-
-    overlays = [
-      (prepareOverlay {
-        mpiProvider = "openmpi";
-      })
-    ];
+  openmpi = prepareOverlay {
+    mpiProvider = "openmpi";
   };
 }

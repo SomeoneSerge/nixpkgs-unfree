@@ -50,10 +50,15 @@ let
     && (isDerivation drv)
     && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
 
-  configs = import ./configs.nix;
+  overlays = import ./overlays.nix;
   nixpkgsInstances = lib.mapAttrs
-    (configName: config: import inputs.nixpkgs ({ inherit system; } // config))
-    configs;
+    (configName: overlay: import inputs.nixpkgs ({
+      inherit system;
+      allowUnfree = true;
+      cudaSupport = true;
+      overlays = [ overlay ];
+    }))
+    overlays;
 
   extraPackages = [
     [ "blas" ]
@@ -133,13 +138,13 @@ let
       in
       if hasFridhPR nixpkgs then jobs else [ ]
     )
-    (builtins.attrNames configs);
+    (builtins.attrNames overlays);
 
   checks =
     let
       matrix = lib.cartesianProductOfSets
         {
-          cfg = builtins.attrNames configs;
+          cfg = builtins.attrNames overlays;
           path = extraPackages ++ pythonAttrs;
         }
       ++ cudaPackages;
