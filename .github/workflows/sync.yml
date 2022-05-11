@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "03 00 * * *" # daily
   workflow_dispatch: # on button click
+  push:
+    branches:
+      - develop
 jobs:
   sync:
     runs-on: ubuntu-latest
