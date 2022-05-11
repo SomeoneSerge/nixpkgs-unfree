@@ -26,7 +26,7 @@ cd "$workdir"
 nix flake update --override-flake nixpkgs "github:NixOS/nixpkgs/$branch"
 
 # Commit the changes
-git commit -am "$branch sync"
+git commit -am "$branch sync" --allow-empty
 
 # Erase previous results
 # TODO: make the commits incremental instead
