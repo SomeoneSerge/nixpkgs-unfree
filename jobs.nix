@@ -54,8 +54,8 @@ let
   nixpkgsInstances = lib.mapAttrs
     (configName: overlay: import inputs.nixpkgs ({
       inherit system;
-      allowUnfree = true;
-      cudaSupport = true;
+      config.allowUnfree = true;
+      config.cudaSupport = true;
       overlays = [ overlay ];
     }))
     overlays;
