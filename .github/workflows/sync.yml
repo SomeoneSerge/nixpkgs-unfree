@@ -2,7 +2,7 @@ name: Sync channels
 
 on: 
   schedule:
-    - cron: "03 00 * * *" # daily
+    - cron: "21 31 * * *" # daily
   workflow_dispatch: # on button click
   push:
     branches:
