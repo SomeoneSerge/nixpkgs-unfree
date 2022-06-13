@@ -16,7 +16,6 @@ jobs:
       matrix:
         branch:
         - release-22.05
-        - nixos-21.11
         - nixpkgs-unstable
         - nixos-unstable
         - master
