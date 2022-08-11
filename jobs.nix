@@ -77,6 +77,7 @@ let
     [ "ethminer-cuda" ]
     [ "gpu-screen-recorder" ]
     [ "xgboost" ]
+    [ "faiss" ]
   ];
 
   pythonAttrs =
@@ -88,6 +89,7 @@ let
             "chainer"
             "cupy"
             "catboost"
+            "faiss"
             "jaxlib"
             "Keras"
             "libgpuarray"
