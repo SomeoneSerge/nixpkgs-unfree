@@ -95,6 +95,7 @@ let
             "libgpuarray"
             "mxnet"
             "opencv4"
+            "torch"
             "pytorch"
             "pytorch-lightning"
             "pycuda"
