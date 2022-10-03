@@ -124,4 +124,9 @@ With the above in mind, let's proceed.
     ```
 
     Note that if you pass `config` in the arguments, you must again include `cudaSupport` and `allowUnfree`
+- NOTE: Setting `<nixpkgs>` to point at this repo has proven a somewhat painful
+  experience. Most problems concentrate around tools using 
+  `import <nixpkgs/lib>`. There's a proxy in [./lib](./lib) right now which makes these import
+  work, but almost certainly at the cost of downloading a yet another copy of
+  nixpkgs...
 - If you're not enabling the cache globally, you might need to set `trusted-users = ${yourName}` in `/etc/nix/nix.conf`.

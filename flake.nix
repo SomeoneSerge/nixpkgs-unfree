@@ -1,6 +1,10 @@
 {
   description = "nixpkgs with the unfree bits enabled";
 
+  inputs = {
+    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
+  };
+
   nixConfig = {
     extra-substituters = [
       "https://cuda-maintainers.cachix.org"
