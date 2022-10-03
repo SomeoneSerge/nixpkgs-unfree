@@ -69,15 +69,25 @@ let
     [ "opencv" ]
     [ "openmpi" ]
     [ "ucx" ]
-    [ "blender" ]
-    [ "colmapWithCuda" ]
+
     [ "suitesparse" ]
     [ "cholmod-extra" ]
     [ "truecrack-cuda" ]
-    [ "ethminer-cuda" ]
     [ "gpu-screen-recorder" ]
     [ "xgboost" ]
     [ "faiss" ]
+
+    # Messy, but vital to keep cached:
+    [ "blender" ]
+    [ "colmapWithCuda" ]
+    [ "opensfm" ]
+
+    # GUI and similar mess, but desirable to have in cache:
+    [ "meshlab" ]
+    [ "qgis" ]
+    [ "ffmpeg-full" ]
+    [ "gst_all_1" "gst-plugins-bad" ]
+    [ "gimp" ]
   ];
 
   pythonAttrs =
@@ -94,10 +104,12 @@ let
             "Keras"
             "libgpuarray"
             "mxnet"
+            "onnx"
             "opencv4"
             "torch"
             "pytorch"
             "pytorch-lightning"
+            "functorch"
             "pycuda"
             "pyrealsense2WithCuda"
             "torchvision"
@@ -116,6 +128,7 @@ let
             "scipy"
           ];
           ps = [
+            # TODO: 2022-10-03: python3 = python310 already in nixpkgs-unstable; consider dropping python39 cache
             "python39Packages"
             "python310Packages"
           ];
