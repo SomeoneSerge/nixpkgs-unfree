@@ -15,8 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         branch:
-        - release-22.05
-        - nixos-22.05
+        - nixos-22.11
         - nixpkgs-unstable
         - nixos-unstable
         - master
