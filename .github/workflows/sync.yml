@@ -28,7 +28,7 @@ jobs:
     - name: Install nix
       uses: cachix/install-nix-action@v16
       with:
-        install_url: https://releases.nixos.org/nix/nix-2.5.1/install
+        install_url: https://releases.nixos.org/nix/nix-2.9.1/install
         extra_nix_config: |
           experimental-features = nix-command flakes
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
