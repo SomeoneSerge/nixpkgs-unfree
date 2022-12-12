@@ -21,7 +21,7 @@ jobs:
         - master
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Flakes don't like shallow clones
         fetch-depth: 0
