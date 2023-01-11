@@ -195,10 +195,10 @@ let
     let
       pkgs = nixpkgsInstances.basic;
       cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
-      stablePython = "python39Packages";
+      stablePython = "python310Packages";
       pyPackages = lib.genAttrs [
-        "pytorch"
-        "cupy"
+        "torch"
+        "torchvision"
         "jaxlib"
         "tensorflowWithCuda"
       ]
