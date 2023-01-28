@@ -81,6 +81,7 @@ let
     [ "blender" ]
     [ "colmapWithCuda" ]
     [ "opensfm" ]
+    [ "tts" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "meshlab" ]
