@@ -23,7 +23,7 @@ git worktree add -f -b "$branch" "$workdir"
 cd "$workdir"
 
 # Get the latest flake.lock from the same upstream branch
-nix flake update --override-flake nixpkgs "github:NixOS/nixpkgs/$branch"
+nix flake update --override-input nixpkgs "github:NixOS/nixpkgs/$branch"
 
 # Commit the changes
 git commit -am "$branch sync" --allow-empty
