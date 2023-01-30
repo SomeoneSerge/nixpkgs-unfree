@@ -103,9 +103,9 @@ in
 
   basic = prepareOverlay { };
 
-  intel = prepareOverlay {
-    isIntel = true;
-  };
+  # intel = prepareOverlay {
+  #   isIntel = true;
+  # };
 
   mpich = prepareOverlay {
     mpiProvider = "mpich";
