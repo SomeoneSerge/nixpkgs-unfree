@@ -43,11 +43,29 @@
       overlays = import ./overlays.nix;
       overlay = self.overlays.basic;
 
-      herculesCI = { ... }: {
-        onPush.default.outputs = {
-          defaultChecks = self.checks;
-          neverBreak = x.x86_64-linux.neverBreak;
+      herculesCI =
+        { ref
+        , branch
+        , tag
+        , rev
+        , shortRev
+        , primaryRepo
+        , herculesCI
+        }: {
+          onPush = { };
+          # onPush.default.outputs = {
+          #   defaultChecks = self.checks;
+          #   neverBreak = x.x86_64-linux.neverBreak;
+          # };
+          onSchedule.writeBranchName.outputs.x86_64-linux =
+            let pkgs = self.legacyPackages.x86_64-linux; in
+            {
+              when.minute = [ 5 10 15 20 25 30 35 40 45 0];
+              when.hour = [ 23 0 ];
+              branch = pkgs.writeText "branch.txt" ''
+                ${branch}: ${rev}
+              '';
+            };
         };
-      };
     };
 }
