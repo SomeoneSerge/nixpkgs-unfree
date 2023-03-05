@@ -41,16 +41,17 @@
           branch = "develop";
           pushJob = "gh-pages";
         };
-        perSystem = { pkgs, ... }: {
+        perSystem = { self', pkgs, ... }: {
+          packages.website = pkgs.writeTextFile {
+            name = "nixpkgs-unfree-gh-pages";
+            destination = "index.html";
+            text = ''
+              <h1>nixpkgs-unfree</h1>
+              <h2>test</h2>
+            '';
+          };
           hercules-ci.github-pages = {
-            settings.contents = pkgs.writeTextFile {
-              name = "nixpkgs-unfree-gh-pages";
-              destination = "index.html";
-              text = ''
-                <h1>nixpkgs-unfree</h1>
-                <h2>test</h2>
-              '';
-            };
+            settings.contents = self'.packages.website;
           };
         };
         flake =
