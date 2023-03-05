@@ -39,6 +39,7 @@
         };
         perSystem = { pkgs, ... }: {
           hercules-ci.github-pages = {
+            branch = "develop";
             settings.contents = pkgs.writeTextFile {
               destination = "index.html";
               text = ''
