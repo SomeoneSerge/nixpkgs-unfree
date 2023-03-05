@@ -44,7 +44,7 @@
         perSystem = { self', pkgs, ... }: {
           packages.website = pkgs.writeTextFile {
             name = "nixpkgs-unfree-gh-pages";
-            destination = "index.html";
+            destination = "/index.html";
             text = ''
               <h1>nixpkgs-unfree</h1>
               <h2>test</h2>
