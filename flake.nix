@@ -39,6 +39,7 @@
         };
         hercules-ci.github-pages = {
           branch = "develop";
+          pushJob = "gh-pages";
         };
         perSystem = { pkgs, ... }: {
           hercules-ci.github-pages = {
@@ -97,7 +98,7 @@
           , ...
           }: {
 
-            onPush.default = lib.mkForce { };
+            onPush.default.outputs = lib.mkForce { };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule.buildMasterAmpereEssential = {
