@@ -1,0 +1,1 @@
+# DEPRECATED: `<nixpkgs/lib>` proxy
