@@ -12,10 +12,22 @@ CUDA in nixpkgs seek in:
 
 With the above in mind, let's proceed.
 
+## Latest warnings
+
+- 2023-03-05: Repo no longer tries to be a drop-in substitute for nixpkgs. We
+  just build. The flake is now used to track all nixpkgs branches (->
+  flake.lock is much larger), and hercules CI's `onSchedule`, rather than a
+  GitHub workflow, is used to trigger builds. For a drop-in nixpkgs replacement
+  cf. [numtide/nixpkgs-unfree](https://github.com/numtide/nixpkgs-unfree)
+
+  We build for different cuda architectures at a different frequencies,
+  which means that to make use of the cache you might need to import nixpkgs
+  as e.g. `import <nixpkgs> { ...; config.cudaCapabilities = [ "8.6" ]; }`.
+  Cf. the flake for details
+
 ## What is this
 
-- This is a fork of @zimbatm's [nixpkgs-unfree](https://github.com/numtide/nixpkgs-unfree/)
-- It's used to build and cache [nixpkgs](https://github.com/NixOS/nixpkgs)
+- The repo is used to build and cache the [nixpkgs](https://github.com/NixOS/nixpkgs)
   world with `cudaSupport = true`.
   See the dashboard at: [https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree](https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree)
   - This means you can use pre-built pytorch, tensorflow, jax and blender with Nix
@@ -27,20 +39,19 @@ With the above in mind, let's proceed.
     - [`nixpkgs-unstable`](https://github.com/NixOS/nixpkgs/tree/nixpkgs-unstable),
     - and the last release, at the time of writing - `nixos-21.11`
 
-    All of them correspond to respective branches in this repo.
-    These branches are automatically maintained, they derive from current
-    [`develop`](https://github.com/SomeoneSerge/nixpkgs-unfree/tree/develop/), but
-    [update the lock file `flake.lock`](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/sync.sh#L26)
-- The builds run [once a day](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/.github/workflows/sync.yml#L5) so cache arrives with delays
+    We might build different branches at different frequency. We also might
+    prioritize certain `cudaCapabilities`.
 - The cachix is limited in space and has garbage collection on. This means that
   you'd need to stay up-to-date to benefit from the cache (as we build newer
   packages, the old cache is eventually discarded)
-- The builds currently run on volunteers' machines.
-  We plan to soon make and maintain the exact list [on wiki](https://nixos.wiki/wiki/CUDA).
-  Each machine uses its own key to push the build results to cachix and these keys can be revoked
-  without breaking the whole chain.
-  You consume just one public key listed at https://cuda-maintainers.cachix.org/.
-  The cachix and cachix keys are currently managed by [@samuela](https://github.com/samuela/)
+- The builds currently run on volunteers' machines. We plan to soon make and
+  maintain the exact list [on wiki](https://nixos.wiki/wiki/CUDA). Each machine
+  uses its own key to push the build results to cachix and these keys can be
+  revoked without breaking the whole chain. You consume just one public key
+  listed at https://cuda-maintainers.cachix.org/. The cachix `cuda-maintainers`
+  cache and cachix keys are currently managed by
+  [@samuela](https://github.com/samuela/). Our cachix space is courtesy of
+  @domenkozar.
 
   We hope one day to arrive at a more sustainable and trust-worthy solution,
   but right now we're working on this as on a proof-of-concept.
@@ -84,7 +95,8 @@ With the above in mind, let's proceed.
   ```
 
   When interacting with your flake, the users would be asked whether they want to use that cache and trust that key.
-- The most consistent way to use cuda-enabled packages from nixpkgs is to import them with the global `config.cudaSupport`:
+- The most consistent albeit most expensive way to use cuda-enabled packages
+  from nixpkgs is to import them with the global `config.cudaSupport`:
 
   ```nix
   pkgs = import nixpkgs { config.allowUnfree = true; config.cudaSupport = true; }
@@ -102,13 +114,13 @@ With the above in mind, let's proceed.
     inputs.nixpkgs-unfree.url = github:SomeoneSerge/nixpkgs-unfree;
     inputs.nixpkgs-unfree.inputs.nixpkgs.follows = "nixpkgs";
     ```
-  - Using in flake inputs as a drop-in replacement for nixpkgs (unless someone does something special)
+  - _DEPRECATED: Using in flake inputs as a drop-in replacement for nixpkgs (unless someone does something special)_
 
     ```nix
     inputs.nixpkgs.url = github:SomeoneSerge/nixpkgs-unfree/nixpkgs-unstable;
     inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
     ```
-  - Importing as nixpkgs:
+  - _DEPRECATED: Importing as nixpkgs:_
 
     ```nix
     inputs.nixpkgs = github:SomeoneSerge/nixpkgs-unfree/nixpkgs-unstable;
@@ -124,9 +136,9 @@ With the above in mind, let's proceed.
     ```
 
     Note that if you pass `config` in the arguments, you must again include `cudaSupport` and `allowUnfree`
-- NOTE: Setting `<nixpkgs>` to point at this repo has proven a somewhat painful
+- _NOTE: Setting `<nixpkgs>` to point at this repo has proven a somewhat painful
   experience. Most problems concentrate around tools using 
   `import <nixpkgs/lib>`. There's a proxy in [./lib](./lib) right now which makes these import
   work, but almost certainly at the cost of downloading a yet another copy of
-  nixpkgs...
-- If you're not enabling the cache globally, you might need to set `trusted-users = ${yourName}` in `/etc/nix/nix.conf`.
+  nixpkgs..._
+- If you're only enabling the cache on a per-project or per-user basis, you might need to set `trusted-users = ${yourName}` in `/etc/nix/nix.conf`.
