@@ -107,11 +107,11 @@ in
   #   isIntel = true;
   # };
 
-  mpich = prepareOverlay {
-    mpiProvider = "mpich";
-  };
+  # mpich = prepareOverlay {
+  #   mpiProvider = "mpich";
+  # };
 
-  openmpi = prepareOverlay {
-    mpiProvider = "openmpi";
-  };
+  # openmpi = prepareOverlay {
+  #   mpiProvider = "openmpi";
+  # };
 }

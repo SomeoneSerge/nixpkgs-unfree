@@ -1,66 +1,40 @@
+# FIXME: make filter-jobs.nix instead, and import nixpkgs in the flake
+
 { system ? builtins.currentSystem
-, inputs ? (builtins.getFlake (builtins.toString ./.)).inputs
-, lib ? inputs.nixpkgs.lib
+, nixpkgs ? (builtins.getFlake (builtins.toString ./.)).inputs.nixpkgs
+, extraConfig ? { }
+, lib ? nixpkgs.lib
 , debug ? false
 }:
 let
-  trace = if debug then builtins.trace else (msg: value: value);
+  utils = import ./utils.nix { inherit debug; };
 
-  # cf. Tweaked version of nixpkgs/maintainers/scripts/check-hydra-by-maintainer.nix
-  maybeBuildable = v:
-    let result = builtins.tryEval
-      (
-        if lib.isDerivation v then
-        # Skip packages whose closure fails on evaluation.
-        # This happens for pkgs like `python27Packages.djangoql`
-        # that have disabled Python pkgs as dependencies.
-          builtins.seq v.outPath [ v ]
-        else [ ]
-      );
-    in if result.success then result.value else [ ];
-  # removed packages (like cudatoolkit_6) are just aliases that `throw`:
-  notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
-
-  isUnfreeRedistributable = licenses:
-    lib.lists.any (l: (!l.free or true) && (l.redistributable or false)) licenses;
-
-  hasLicense = pkg:
-    pkg ? meta.license;
-
-  hasUnfreeRedistributableLicense = pkg:
-    hasLicense pkg &&
-    isUnfreeRedistributable (lib.lists.toList pkg.meta.license);
-
-  isDerivation = a: a ? type && a.type == "derivation";
-
-  # Picking out the redist parts of cuda
-  # and specifically ignoring the runfile-based cudatoolkit
-  cuPrefixae = [
-    "cudnn"
-    "cutensor"
-    "cuda_"
-    "cuda-"
-    "lib"
-    "nccl"
-    "nsight_systems"
-    "nsight_compute"
-  ];
-  isCuPackage = name: drv:
-    (notRemoved drv)
-    && (isDerivation drv)
-    && (builtins.any (p: lib.hasPrefix p name) cuPrefixae);
+  inherit (utils)
+    maybeBuildable
+    isCuPackage
+    ;
 
   overlays = import ./overlays.nix;
   nixpkgsInstances = lib.mapAttrs
-    (configName: overlay: import inputs.nixpkgs ({
+    (configName: overlay: import nixpkgs ({
       inherit system;
-      config.allowUnfree = true;
-      config.cudaSupport = true;
+      config = {
+        allowUnfree = true;
+        cudaSupport = true;
+      } // extraConfig;
       overlays = [ overlay ];
     }))
     overlays;
 
-  extraPackages = [
+  neverBreakExtra = [
+    # Messy, but vital to keep cached:
+    [ "blender" ]
+    [ "colmapWithCuda" ]
+    [ "tts" ]
+    [ "faiss" ]
+  ];
+
+  extraPackages = neverBreakExtra ++ [
     [ "blas" ]
     [ "cudnn" ]
     [ "lapack" ]
@@ -75,13 +49,8 @@ let
     [ "truecrack-cuda" ]
     [ "gpu-screen-recorder" ]
     [ "xgboost" ]
-    [ "faiss" ]
 
-    # Messy, but vital to keep cached:
-    [ "blender" ]
-    [ "colmapWithCuda" ]
     [ "opensfm" ]
-    [ "tts" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "meshlab" ]
@@ -168,7 +137,7 @@ let
       supported = builtins.concatMap
         ({ cfg, path }:
           let
-            jobName = lib.concatStringsSep "_" ([ cfg ] ++ path);
+            jobName = lib.concatStringsSep "." path;
             package = lib.attrByPath path [ ] nixpkgsInstances.${cfg};
             mbSupported = maybeBuildable package;
           in
@@ -180,13 +149,7 @@ let
         ({ jobName, package }: lib.nameValuePair jobName package)
         supported;
 
-      dedupOutpaths = nameDrvPairs:
-        let
-          outPathToPair = lib.groupBy (pair: (builtins.unsafeDiscardStringContext pair.value.outPath)) nameDrvPairs;
-          groupedPairs = builtins.attrValues outPathToPair;
-          uniquePairs = builtins.map builtins.head groupedPairs;
-        in
-        uniquePairs;
+      inherit (utils) dedupOutpaths;
     in
     lib.listToAttrs (dedupOutpaths kvPairs);
 
@@ -195,17 +158,54 @@ let
   neverBreak =
     let
       pkgs = nixpkgsInstances.basic;
-      cuPackages = lib.filterAttrs isCuPackage pkgs.cudaPackages;
-      stablePython = "python310Packages";
-      pyPackages = lib.genAttrs [
+      cuPackages = lib.attrNames (
+        lib.filterAttrs (name: drv: isCuPackage name drv && !builtins.elem name unsupportedCuPackages)
+          pkgs.cudaPackages);
+      unsupportedCuPackages = [
+        "cuda-samples"
+        "nvidia_driver"
+        "tensorrt"
+        "tensorrt_8_4_0"
+      ];
+      latestPython = "python3Packages";
+      pyPackages = [
         "torch"
         "torchvision"
         "jaxlib"
+        "jax"
         "tensorflowWithCuda"
-      ]
-        (name: pkgs.${stablePython}.${name});
+        "opencv4"
+      ];
+      matrixPy = lib.cartesianProductOfSets {
+        pkg = pyPackages;
+        ps = [ latestPython ];
+      };
+      matrixCu = lib.cartesianProductOfSets {
+        pkg = cuPackages;
+        ps = [ "cudaPackages" ];
+      };
+      mkPath = { pkg, ps }: [ ps pkg ];
+      matrix =
+        neverBreakExtra ++
+        builtins.map
+          mkPath
+          (matrixPy ++ matrixCu);
+      jobs = builtins.concatMap
+        (path:
+          let
+            jobName = lib.concatStringsSep "." path;
+            package = lib.attrByPath path [ ] pkgs;
+          in
+          assert builtins.isList path;
+          assert builtins.isString (builtins.head path);
+          [{ inherit jobName package; }])
+        matrix;
+      kvPairs = builtins.map
+        ({ jobName, package }: lib.nameValuePair jobName package)
+        jobs;
     in
-    pyPackages // cuPackages;
+    assert builtins.isList matrix;
+    (lib.listToAttrs kvPairs);
 in
 {
   # Export the whole tree
