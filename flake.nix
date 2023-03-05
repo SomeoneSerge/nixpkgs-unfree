@@ -97,7 +97,7 @@
           , ...
           }: {
 
-            onPush.default.enable = false;
+            onPush.default = lib.mkForce { };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule.buildMasterAmpereEssential = {
