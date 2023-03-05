@@ -83,13 +83,9 @@
           , ...
           }: {
             onPush = lib.mkForce { };
-            # onPush.default.outputs = {
-            #   defaultChecks = self.checks;
-            #   neverBreak = x.x86_64-linux.neverBreak;
-            # };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
-            onSchedule.neverBreak = {
+            onSchedule.buildMasterAmpereEssential = {
               when.hour = [ 0 2 20 22 ];
               outputs =
                 let
@@ -103,8 +99,7 @@
                 in
                 jobs.neverBreak;
             };
-
-            onSchedule.masterAmpere = {
+            onSchedule.buildMasterAmpereMatrix = {
               when.hour = [ 21 ];
               outputs =
                 let
@@ -119,9 +114,23 @@
                 jobs.checks;
             };
 
+            onSchedule.buildMasterDefaultCapabilities = {
+              when.hour = [ 21 ];
+              when.dayOfWeek = [ "Fri" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.nixpkgs-master;
+                  };
+                in
+                jobs.checks;
+            };
+
             # Default cudaCapabilities
 
-            onSchedule.nixpkgsUnstableMatrix = {
+            onSchedule.buildNixpkgsUnstableMatrix = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -133,7 +142,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.nixosUnstableMatrix = {
+            onSchedule.buildNixosUnstableMatrix = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -141,6 +150,32 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.nixpkgs-nixos-unstable;
+                  };
+                in
+                jobs.checks;
+            };
+            onSchedule.buildNixpkgsUnstableMatrixAmpere = {
+              when.dayOfWeek = [ "Sat" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.nixpkgs-nixpkgs-unstable;
+                    extraConfig.cudaCapabilities = [ "8.6" ];
+                  };
+                in
+                jobs.checks;
+            };
+            onSchedule.buildNixosUnstableMatrixAmpere = {
+              when.dayOfWeek = [ "Sat" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.nixpkgs-nixos-unstable;
+                    extraConfig.cudaCapabilities = [ "8.6" ];
                   };
                 in
                 jobs.checks;
