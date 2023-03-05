@@ -35,7 +35,10 @@
             hour = [ 2 19 ];
           };
           autoMergeMethod = "rebase";
-          createPullRequest = true;
+
+          # Don't create PRs in flake-update, instead push to master
+          createPullRequest = false;
+          updateBranch = "develop";
         };
         hercules-ci.github-pages = {
           branch = "develop";
