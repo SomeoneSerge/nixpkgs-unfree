@@ -94,7 +94,8 @@
           , lib # Because of flake-parts...
           , ...
           }: {
-            onPush = lib.mkForce { };
+            # flake-parts seem to auto-create default, we hope to prevent this
+            onPush.default = { };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule.buildMasterAmpereEssential = {
