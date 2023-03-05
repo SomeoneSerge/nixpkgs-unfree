@@ -35,7 +35,7 @@
             hour = [ 2 19 ];
           };
           autoMergeMethod = "rebase";
-          createPullRequest = false;
+          createPullRequest = true;
         };
         flake =
           let
