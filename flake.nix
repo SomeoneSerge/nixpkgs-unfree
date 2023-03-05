@@ -44,6 +44,7 @@
         perSystem = { pkgs, ... }: {
           hercules-ci.github-pages = {
             settings.contents = pkgs.writeTextFile {
+              name = "nixpkgs-unfree-gh-pages";
               destination = "index.html";
               text = ''
                 <h1>nixpkgs-unfree</h1>
