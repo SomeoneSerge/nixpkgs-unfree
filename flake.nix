@@ -37,6 +37,17 @@
           autoMergeMethod = "rebase";
           createPullRequest = true;
         };
+        perSystem = { pkgs, ... }: {
+          hercules-ci.github-pages = {
+            settings.contents = pkgs.writeTextFile {
+              destination = "index.html";
+              text = ''
+                <h1>nixpkgs-unfree</h1>
+                <h2>test</h2>
+              '';
+            };
+          };
+        };
         flake =
           let
 
