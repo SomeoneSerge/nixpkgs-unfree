@@ -123,5 +123,13 @@
               jobs.checks;
           };
         };
+
+      # Not sure if it goes here, or if I need flake-parts
+      flake-update = {
+        enable = true;
+        when = {
+          hour = [ 2 20 ];
+        };
+      };
     };
 }
