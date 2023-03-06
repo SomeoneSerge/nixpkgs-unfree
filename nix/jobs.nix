@@ -11,7 +11,7 @@ let
 
   inherit (utils)
     maybeBuildable
-    isCuPackage
+    isSupportedCuPackage
     ;
 
   overlays = import ./overlays.nix;
@@ -120,7 +120,7 @@ let
           (pkg: {
             inherit cfg; path = [ "cudaPackages" pkg ];
           })
-          (builtins.attrNames (lib.filterAttrs isCuPackage nixpkgs.cudaPackages));
+          (builtins.attrNames (lib.filterAttrs isSupportedCuPackage nixpkgs.cudaPackages));
       in
       if hasFridhPR nixpkgs then jobs else [ ]
     )
@@ -159,14 +159,9 @@ let
     let
       pkgs = nixpkgsInstances.basic;
       cuPackages = lib.attrNames (
-        lib.filterAttrs (name: drv: isCuPackage name drv && !builtins.elem name unsupportedCuPackages)
-          pkgs.cudaPackages);
-      unsupportedCuPackages = [
-        "cuda-samples"
-        "nvidia_driver"
-        "tensorrt"
-        "tensorrt_8_4_0"
-      ];
+        lib.filterAttrs isSupportedCuPackage
+          pkgs.cudaPackages
+      );
       latestPython = "python3Packages";
       pyPackages = [
         "torch"

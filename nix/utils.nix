@@ -60,10 +60,17 @@ rec {
     "nvidia_"
     "tensorrt"
   ];
+  unsupportedCuPackages = [
+    "cuda-samples"
+    "nvidia_driver"
+    "tensorrt"
+    "tensorrt_8_4_0"
+  ];
   isCuPackage = name: drv:
     (notRemoved drv)
     && (isDerivation drv)
     && (builtins.any (p: hasPrefix p name) cuPrefixae);
+  isSupportedCuPackage = name: drv: (isCuPackage name drv) && !builtins.elem name unsupportedCuPackages;
 
   dedupOutpaths = nameDrvPairs:
     let
