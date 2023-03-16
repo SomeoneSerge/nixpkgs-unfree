@@ -103,7 +103,8 @@
           , ...
           }: {
 
-            onPush.default.outputs = lib.mkForce { };
+            # To disable the "default" checks:
+            # onPush.default.outputs = lib.mkForce { };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule.buildMaster86Essential = {
