@@ -137,7 +137,7 @@ let
       supported = builtins.concatMap
         ({ cfg, path }:
           let
-            jobName = lib.concatStringsSep "." path;
+            jobName = lib.concatStringsSep "." ([ cfg ] ++ path);
             package = lib.attrByPath path [ ] nixpkgsInstances.${cfg};
             mbSupported = maybeBuildable package;
           in

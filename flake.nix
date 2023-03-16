@@ -106,7 +106,7 @@
             onPush.default.outputs = lib.mkForce { };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
-            onSchedule.buildMasterAmpereEssential = {
+            onSchedule.buildMaster86Essential = {
               when.hour = [ 0 2 20 22 ];
               outputs =
                 let
@@ -120,7 +120,7 @@
                 in
                 jobs.neverBreak;
             };
-            onSchedule.buildMasterAmpereMatrix = {
+            onSchedule.buildMaster86Matrix = {
               when.hour = [ 21 ];
               outputs =
                 let
@@ -175,7 +175,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixpkgsUnstableMatrixAmpere = {
+            onSchedule.buildNixpkgsUnstableMatrix86 = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -188,8 +188,8 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrixAmpere = {
-              when.dayOfWeek = [ "Sat" ];
+            onSchedule.buildNixosUnstableMatrix86 = {
+              when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
                   system = "x86_64-linux";
@@ -197,6 +197,19 @@
                     inherit system;
                     nixpkgs = inputs.nixpkgs-nixos-unstable;
                     extraConfig.cudaCapabilities = [ "8.6" ];
+                  };
+                in
+                jobs.checks;
+            };
+            onSchedule.buildNixosUnstableMatrix80 = {
+              when.dayOfWeek = [ "Sat" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.nixpkgs-nixos-unstable;
+                    extraConfig.cudaCapabilities = [ "8.0" ];
                   };
                 in
                 jobs.checks;
