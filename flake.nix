@@ -136,7 +136,21 @@
                 jobs.checks;
             };
 
-            onSchedule.buildMasterDefaultCapabilities = {
+            # Build pytorch&c with default capabilities, daily
+            onSchedule.buildMasterDefaultCapabilitiesEssential = {
+              when.hour = [ 3 ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.nixpkgs-master;
+                  };
+                in
+                jobs.neverBreak;
+            };
+
+            onSchedule.buildMasterDefaultCapabilitiesMatrix = {
               when.hour = [ 21 ];
               when.dayOfWeek = [ "Fri" ];
               outputs =
