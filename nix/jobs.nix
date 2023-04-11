@@ -79,6 +79,8 @@ let
             "libgpuarray"
             "mxnet"
             "onnx"
+            "openai-triton"
+            "openai-whisper"
             "opencv4"
             "pycuda"
             "pyrealsense2WithCuda"
@@ -89,8 +91,10 @@ let
             "tensorflow-probability"
             "tensorflowWithCuda"
             "TheanoWithCuda"
+            "tiny-cuda-nn"
             "torch"
             "torchvision"
+            "tts"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
