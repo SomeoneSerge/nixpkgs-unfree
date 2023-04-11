@@ -56,7 +56,7 @@ let
         lapack = prev.lapack.override {
           lapackProvider = final.mkl;
         };
-        opencv = prev.opencv.override {
+        opencvWithTbb = prev.opencv.override {
           enableTbb = true;
         };
       } //
