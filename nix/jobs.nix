@@ -30,8 +30,8 @@ let
     # Messy, but vital to keep cached:
     [ "blender" ]
     [ "colmapWithCuda" ]
-    [ "tts" ]
     [ "faiss" ]
+    [ "tts" ]
   ];
 
   extraPackages = neverBreakExtra ++ [
@@ -44,20 +44,20 @@ let
     [ "openmpi" ]
     [ "ucx" ]
 
-    [ "suitesparse" ]
     [ "cholmod-extra" ]
-    [ "truecrack-cuda" ]
     [ "gpu-screen-recorder" ]
+    [ "suitesparse" ]
+    [ "truecrack-cuda" ]
     [ "xgboost" ]
 
     [ "opensfm" ]
 
     # GUI and similar mess, but desirable to have in cache:
+    [ "ffmpeg-full" ]
+    [ "gimp" ]
+    [ "gst_all_1" "gst-plugins-bad" ]
     [ "meshlab" ]
     [ "qgis" ]
-    [ "ffmpeg-full" ]
-    [ "gst_all_1" "gst-plugins-bad" ]
-    [ "gimp" ]
   ];
 
   pythonAttrs =
@@ -66,32 +66,31 @@ let
         {
           pkg = [
             "caffe"
+            "catboost"
             "chainer"
             "cupy"
-            "catboost"
             "faiss"
+            "flax"
+            "functorch"
+            "jax"
+            "jaxlib"
             "jaxlib"
             "Keras"
             "libgpuarray"
             "mxnet"
             "onnx"
             "opencv4"
-            "torch"
-            "pytorch"
-            "pytorch-lightning"
-            "functorch"
             "pycuda"
             "pyrealsense2WithCuda"
-            "torchvision"
-            "jaxlib"
-            "jax"
-            "flax"
-            "TheanoWithCuda"
-            "tensorflowWithCuda"
-            "tensorflow-probability"
-            # makes sure it's cached with MKL
-            "scikit-learn"
+            "pytorch"
+            "pytorch-lightning"
             "scikitimage"
+            "scikit-learn" # makes sure it's cached with MKL
+            "tensorflow-probability"
+            "tensorflowWithCuda"
+            "TheanoWithCuda"
+            "torch"
+            "torchvision"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
@@ -164,12 +163,12 @@ let
       );
       latestPython = "python3Packages";
       pyPackages = [
+        "jax"
+        "jaxlib"
+        "opencv4"
+        "tensorflowWithCuda"
         "torch"
         "torchvision"
-        "jaxlib"
-        "jax"
-        "tensorflowWithCuda"
-        "opencv4"
       ];
       matrixPy = lib.cartesianProductOfSets {
         pkg = pyPackages;
