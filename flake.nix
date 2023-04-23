@@ -224,7 +224,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrix80 = { withSystem, ... }: {
+            onSchedule.buildNixosUnstableMatrix80 = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -237,15 +237,15 @@
                   };
                 in
                 jobs.checks // {
-                  effects = withSystem system ({ hci-effects, pkgs, ... }: {
+                  effects = ({ hci-effects, pkgs, ... }: {
                     # I don't quite understand if hercules is going to evaluate this "module"?
                     publishBranch = hci-effects.modularEffect {
                       imports = [ ./effects/git-push/effects-fun.nix ];
+                      git.push.source.url = "git@github.com:NixOS/nixpkgs.git";
+                      git.push.source.ref = inputs.${input}.rev;
+                      git.push.destination.url = "git@github.com:9d80dba85131ab22/nixpkgs.git";
+                      git.push.destination.ref = "buildNixosUnstable80";
                     };
-                    git.push.source.url = "git@github.com:NixOS/nixpkgs.git";
-                    git.push.source.ref = inputs.${input}.rev;
-                    git.push.destination.url = "git@github.com:9d80dba85131ab22/nixpkgs.git";
-                    git.push.destination.ref = "buildNixosUnstable80";
                   });
                 };
             };
