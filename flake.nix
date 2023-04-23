@@ -105,6 +105,18 @@
 
             # To disable the "default" checks:
             # onPush.default.outputs = lib.mkForce { };
+            onPush.default.outputs = {
+              effects = withSystem "x86_64-linux" ({ hci-effects, pkgs, ... }: {
+                releaseBranch = hci-effects.modularEffect {
+                  imports = [ ./effects/git-push/effects-fun.nix ];
+                  git.push.source.url = "https://github.com/NixOS/nixpkgs.git";
+                  git.push.source.ref = inputs.nixpkgs-master.rev;
+                  git.push.destination.url = "https://github.com/9d80dba85131ab22/nixpkgs.git";
+                  git.push.destination.ref = "buildNixosUnstable80";
+                  git.push.destination.tokenSecret = "nixpkgCuda";
+                };
+              });
+            };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule.buildMaster86Essential = {
@@ -236,18 +248,7 @@
                     extraConfig.cudaCapabilities = [ "8.0" ];
                   };
                 in
-                jobs.checks // {
-                  effects = withSystem "x86_64-linux" ({ hci-effects, pkgs, ... }: {
-                    publishBranch = hci-effects.modularEffect {
-                      imports = [ ./effects/git-push/effects-fun.nix ];
-                      git.push.source.url = "https://github.com/NixOS/nixpkgs.git";
-                      git.push.source.ref = inputs.${input}.rev;
-                      git.push.destination.url = "https://github.com/9d80dba85131ab22/nixpkgs.git";
-                      git.push.destination.ref = "buildNixosUnstable80";
-                      git.push.destination.tokenSecret = "nixpkgCuda";
-                    };
-                  });
-                };
+                jobs.checks;
             };
           };
       });
