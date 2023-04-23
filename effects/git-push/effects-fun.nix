@@ -1,5 +1,7 @@
-{ lib
+{ config
+, lib
 , pkgs
+, ...
 }:
 
 let
@@ -27,6 +29,13 @@ let
 in
 {
   options = {
+    git.push.user = mkOption {
+      description = ''
+        GitHub repository to pull from
+      '';
+      default = "x-access-token";
+      type = types.str;
+    };
     git.push.source.url = mkOption {
       description = ''
         GitHub repository to pull from
@@ -37,13 +46,14 @@ in
       description = ''
         The source ref to pull
       '';
+      type = types.str;
     };
     git.push.source.tokenSecret = mkOption {
-      type = types.str;
       description = ''
         Name of the secret that contains the git token for the source repo.
       '';
       default = "token";
+      type = types.str;
     };
     git.push.destination.url = mkOption {
       description = ''
@@ -58,22 +68,23 @@ in
       type = types.str;
     };
     git.push.destination.tokenSecret = mkOption {
-      type = types.str;
       description = ''
         Name of the secret that contains the git token for the destination repo.
       '';
-      default = "token";
+      type = types.str;
     };
     git.push.force = mkOption {
       description = ''
         Whether to --force push
       '';
       type = types.bool;
+      default = false;
     };
     git.push.beforePush = mkOption {
       description = ''
         Extra commands to run prior to `git push`
       '';
+      default = "";
       type = types.lines;
     };
   };
@@ -100,14 +111,19 @@ in
       echo "${source.scheme}://${cfg.user}:$(readSecretString ${cfg.source.tokenSecret} .token)@${source.host}${source.path}" >>~/.git-credentials
       echo "${destination.scheme}://${cfg.user}:$(readSecretString ${cfg.destination.tokenSecret} .token)@${destination.host}${destination.path}" >>~/.git-credentials
       git config --global credential.helper store
+      git config --global init.defaultBranch "doNotPesterMeAboutMainsAndMasters"
 
-      git clone "$HCI_GIT_SOURCE_URL" --branch "$HCI_GIT_SOURCE_REF" --single-branch "repo"
+      mkdir "repo"
       cd "repo"
+      git init
+      git remote add "source" "$HCI_GIT_SOURCE_URL"
+      git fetch "source" "$HCI_GIT_SOURCE_REF"
+      git checkout -b source_branch "$HCI_GIT_SOURCE_REF"
       git remote add "destination" "$HCI_GIT_DESTINATION_URL"
 
       ${cfg.beforePush}
 
-      git push "$HCI_GIT_PUSH_FORCE" "destination" HEAD:"$HCI_GIT_DESTINATION_REF"
+      git push $HCI_GIT_PUSH_FORCE "destination" HEAD:"$HCI_GIT_DESTINATION_REF"
     '';
   };
 }
