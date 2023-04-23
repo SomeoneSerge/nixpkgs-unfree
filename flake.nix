@@ -113,9 +113,10 @@
                 let
                   system = "x86_64-linux";
                   cudaCapabilities = [ "8.6" ];
+                  input = "nixpkgs-master";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-master;
+                    nixpkgs = inputs.${input};
                     extraConfig = { inherit cudaCapabilities; };
                   };
                 in
@@ -127,9 +128,10 @@
                 let
                   system = "x86_64-linux";
                   cudaCapabilities = [ "8.6" ];
+                  input = "nixpkgs-master";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-master;
+                    nixpkgs = inputs.${input};
                     extraConfig = { inherit cudaCapabilities; };
                   };
                 in
@@ -142,9 +144,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-master";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-master;
+                    nixpkgs = inputs.${input};
                   };
                 in
                 jobs.neverBreak;
@@ -156,9 +159,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-master";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-master;
+                    nixpkgs = inputs.${input};
                   };
                 in
                 jobs.checks;
@@ -171,9 +175,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-nixpkgs-unstable";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-nixpkgs-unstable;
+                    nixpkgs = inputs.${input};
                   };
                 in
                 jobs.checks;
@@ -183,9 +188,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-nixos-unstable";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-nixos-unstable;
+                    nixpkgs = inputs.${input};
                   };
                 in
                 jobs.checks;
@@ -195,9 +201,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-nixpkgs-unstable";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-nixpkgs-unstable;
+                    nixpkgs = inputs.${input};
                     extraConfig.cudaCapabilities = [ "8.6" ];
                   };
                 in
@@ -208,9 +215,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-nixos-unstable";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-nixos-unstable;
+                    nixpkgs = inputs.${input};
                     extraConfig.cudaCapabilities = [ "8.6" ];
                   };
                 in
@@ -221,9 +229,10 @@
               outputs =
                 let
                   system = "x86_64-linux";
+                  input = "nixpkgs-nixos-unstable";
                   jobs = import ./nix/jobs.nix {
                     inherit system;
-                    nixpkgs = inputs.nixpkgs-nixos-unstable;
+                    nixpkgs = inputs.${input};
                     extraConfig.cudaCapabilities = [ "8.0" ];
                   };
                 in
