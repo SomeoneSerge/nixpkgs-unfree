@@ -100,7 +100,6 @@
           , primaryRepo
           , herculesCI
           , lib # Because of flake-parts...
-          , withSystem
           , ...
           }: {
 
@@ -225,7 +224,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrix80 = {
+            onSchedule.buildNixosUnstableMatrix80 = { withSystem, ... }: {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
