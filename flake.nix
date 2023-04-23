@@ -22,7 +22,7 @@
   };
 
   outputs = inputs@{ self, flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; }
+    flake-parts.lib.mkFlake { inherit inputs; } ({ withSystem, config, ... }:
       {
         imports = [
           inputs.hercules-ci-effects.flakeModule
@@ -237,8 +237,7 @@
                   };
                 in
                 jobs.checks // {
-                  effects = ({ hci-effects, pkgs, ... }: {
-                    # I don't quite understand if hercules is going to evaluate this "module"?
+                  effects = withSystem "x86_64-linux" ({ hci-effects, pkgs, ... }: {
                     publishBranch = hci-effects.modularEffect {
                       imports = [ ./effects/git-push/effects-fun.nix ];
                       git.push.source.url = "git@github.com:NixOS/nixpkgs.git";
@@ -250,5 +249,5 @@
                 };
             };
           };
-      };
+      });
 }
