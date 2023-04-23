@@ -26,7 +26,7 @@ let
   source = parseURL cfg.source.url;
   destination = parseURL cfg.destination.url;
 in
-modularEffect {
+{
   options = {
     git.push.source.url = mkOption {
       description = ''

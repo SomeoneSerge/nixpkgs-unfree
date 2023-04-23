@@ -240,8 +240,8 @@
                 jobs.checks // {
                   effects = withSystem system ({ hci-effects, pkgs, ... }: {
                     # I don't quite understand if hercules is going to evaluate this "module"?
-                    publishBranch = {
-                      imports = [ (import ./effects/git-push/effects-fun.nix { inherit lib pkgs; inherit (hci-effects) modularEffect; }) ];
+                    publishBranch = hci-effects.modularEffect {
+                      imports = [ ./effects/git-push/effects-fun.nix ];
                     };
                     git.push.source.url = "git@github.com:NixOS/nixpkgs.git";
                     git.push.source.ref = inputs.${input}.rev;
