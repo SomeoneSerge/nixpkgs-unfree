@@ -110,6 +110,7 @@ in
       # Based on https://github.com/hercules-ci/hercules-ci-effects/blob/15ff4f63e5f28070391a5b09a82f6d5c6cc5c9d0/effects/modules/git-auth.nix#L73-L74
       echo "${source.scheme}://${cfg.user}:$(readSecretString ${cfg.source.tokenSecret} .token)@${source.host}${source.path}" >>~/.git-credentials
       echo "${destination.scheme}://${cfg.user}:$(readSecretString ${cfg.destination.tokenSecret} .token)@${destination.host}${destination.path}" >>~/.git-credentials
+      echo "${destination.scheme}://${cfg.user}:...@${destination.host}${destination.path}"
       git config --global credential.helper store
       git config --global init.defaultBranch "doNotPesterMeAboutMainsAndMasters"
 
