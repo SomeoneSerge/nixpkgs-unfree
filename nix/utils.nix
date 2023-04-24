@@ -58,7 +58,8 @@ rec {
     "nsight_systems"
     "nsight_compute"
     "nvidia_"
-    "tensorrt"
+    # Requires manually adding trt to /nix/store:
+    # "tensorrt"
   ];
   unsupportedCuPackages = [
     "cuda-samples"
