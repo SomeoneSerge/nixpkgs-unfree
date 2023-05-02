@@ -49,7 +49,7 @@ let
         pytorchMpi = prev.python3Packages.pytorch.override {
           MPISupport = true;
         };
-      } // optionalAttrs (isIntel && prev.hostPlatform.is64Bit) {
+      } // optionalAttrs isIntel {
         blas = prev.blas.override {
           blasProvider = final.mkl;
         };
