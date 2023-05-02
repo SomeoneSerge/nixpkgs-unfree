@@ -49,17 +49,22 @@ let
         pytorchMpi = prev.python3Packages.pytorch.override {
           MPISupport = true;
         };
-      } // optionalAttrs isIntel {
-        blas = prev.blas.override {
-          blasProvider = final.mkl;
-        };
-        lapack = prev.lapack.override {
-          lapackProvider = final.mkl;
-        };
-        opencvWithTbb = prev.opencv.override {
-          enableTbb = true;
-        };
-      } //
+      } // optionalAttrs isIntel
+        (
+          let
+            # Not using optionalAttrs so as to avoid infinite recursion
+            mklBlas = prev.blas.override { blasProvider = final.mkl; };
+            mklLapack = prev.lapack.override { lapackProvider = final.mkl; };
+            cond = prev.hostPlatform.is64bit;
+          in
+          {
+            blas = if cond then mklBlas else prev.blas;
+            lapack = if cond then mklLapack else prev.lapack;
+            opencvWithTbb = prev.opencv.override {
+              enableTbb = true;
+            };
+          }
+        ) //
       (
         let
           dontOverride = builtins.isNull cudaVersion && builtins.isNull cudnnVersion;
