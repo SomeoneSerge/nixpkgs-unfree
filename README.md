@@ -29,7 +29,7 @@ With the above in mind, let's proceed.
 
 - The repo is used to build and cache the [nixpkgs](https://github.com/NixOS/nixpkgs)
   world with `cudaSupport = true`.
-  See the dashboard at: [https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree](https://hercules-ci.com/github/SomeoneSerge/nixpkgs-unfree)
+  See the dashboard at: [https://hercules-ci.com/github/SomeoneSerge/nixpkgs-cuda-ci](https://hercules-ci.com/github/SomeoneSerge/nixpkgs-cuda-ci)
   - This means you can use pre-built pytorch, tensorflow, jax and blender with Nix
   - This also means that [we](https://github.com/orgs/NixOS/teams/cuda-maintainers) notice and can act when things break in development branches.
     [We build](https://github.com/SomeoneSerge/nixpkgs-unfree/blob/7c716ccef51332e90777589c53265a09a3c0fbfa/.github/workflows/sync.yml#L14):
