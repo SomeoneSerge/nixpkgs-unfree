@@ -1,4 +1,4 @@
-# nixpkgs-unfree - nixpkgs with the unfree bits enabled
+# nixpkgs-cuda-ci
 
 
 First, a word of warning: this is just a development repo that ought to be
