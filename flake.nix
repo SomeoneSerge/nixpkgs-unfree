@@ -119,7 +119,7 @@
             };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
-            onSchedule.buildMaster86Essential = {
+            onSchedule."master, no overlays, arches: 8_6" = {
               when.hour = [ 0 2 20 22 ];
               outputs =
                 let
@@ -134,7 +134,7 @@
                 in
                 jobs.neverBreak;
             };
-            onSchedule.buildMaster86Matrix = {
+            onSchedule."master, mkl overlay, arches: 8_6" = {
               when.hour = [ 21 ];
               outputs =
                 let
@@ -151,7 +151,7 @@
             };
 
             # Build pytorch&c with default capabilities, daily
-            onSchedule.buildMasterDefaultCapabilitiesEssential = {
+            onSchedule."master, no overlays, arches: all" = {
               when.hour = [ 3 ];
               outputs =
                 let
@@ -165,7 +165,7 @@
                 jobs.neverBreak;
             };
 
-            onSchedule.buildMasterDefaultCapabilitiesMatrix = {
+            onSchedule."master, mkl overlay, arches: all" = {
               when.hour = [ 21 ];
               when.dayOfWeek = [ "Fri" ];
               outputs =
@@ -182,7 +182,7 @@
 
             # Default cudaCapabilities
 
-            onSchedule.buildNixpkgsUnstableMatrix = {
+            onSchedule."nixpkgs-unstable, mkl overlay, arches: all" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -195,7 +195,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrix = {
+            onSchedule."nixos-unstable, mkl overlay, arches: all" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -208,7 +208,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixpkgsUnstableMatrix86 = {
+            onSchedule."nixpkgs-unstable, mkl overlay, arches: 8_6" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -222,7 +222,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrix86 = {
+            onSchedule."nixos-unstable, mkl overlay, arches: 8_6" = {
               when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
@@ -236,7 +236,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule.buildNixosUnstableMatrix80 = {
+            onSchedule."nixos-unstable, mkl overlay, arches: 8_0" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
