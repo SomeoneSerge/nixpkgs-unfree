@@ -101,9 +101,9 @@ let
             "scipy"
           ];
           ps = [
-            # TODO: 2022-10-03: python3 = python310 already in nixpkgs-unstable; consider dropping python39 cache
-            "python39Packages"
-            "python310Packages"
+            "python3Packages"
+            # "python310Packages"
+            # "python311Packages"
           ];
         };
 
