@@ -58,6 +58,11 @@ let
     [ "gst_all_1" "gst-plugins-bad" ]
     [ "meshlab" ]
     [ "qgis" ]
+
+    [ "linuxPackages" "nvidia_x11" ]
+    [ "linuxPackages" "nvidia_x11_beta" ]
+    [ "linuxPackages" "nvidia_x11_beta_open" ]
+    [ "linuxPackages" "nvidia_x11_vulkan_beta_open" ]
   ];
 
   pythonAttrs =
