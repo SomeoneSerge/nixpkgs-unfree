@@ -9,6 +9,8 @@
     nixpkgs-nixos-unstable.url = github:NixOS/nixpkgs/nixos-unstable;
     nixpkgs-release.url = github:NixOS/nixpkgs/nixos-21.11;
 
+    pr-gst-plugins-bad-without-opencv.url = github:GenericNerdyUsername/nixpkgs/gst-plugins-bad-no-opencv;
+
     hercules-ci-effects.url = github:hercules-ci/hercules-ci-effects;
   };
 
@@ -116,6 +118,19 @@
                   git.push.destination.tokenSecret = "nixpkgCuda";
                 };
               });
+            };
+
+            onPush.pr-gst-opencv.outputs = {
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  input = "pr-gst-plugins-bad-without-opencv";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                in
+                jobs.checks;
             };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when

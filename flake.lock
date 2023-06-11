@@ -336,6 +336,22 @@
         "type": "github"
       }
     },
+    "pr-gst-plugins-bad-without-opencv": {
+      "locked": {
+        "lastModified": 1686177127,
+        "narHash": "sha256-cJySMKkB7MZegWJtrlMqTwgiVYIRm2QWxzZzb0PcicU=",
+        "owner": "GenericNerdyUsername",
+        "repo": "nixpkgs",
+        "rev": "42abe23c135498bef5134547d8ee8f5a8841a0e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GenericNerdyUsername",
+        "ref": "gst-plugins-bad-no-opencv",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks-nix": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -372,7 +388,8 @@
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-nixos-unstable": "nixpkgs-nixos-unstable",
         "nixpkgs-nixpkgs-unstable": "nixpkgs-nixpkgs-unstable",
-        "nixpkgs-release": "nixpkgs-release"
+        "nixpkgs-release": "nixpkgs-release",
+        "pr-gst-plugins-bad-without-opencv": "pr-gst-plugins-bad-without-opencv"
       }
     }
   },
