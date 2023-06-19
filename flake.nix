@@ -9,8 +9,6 @@
     nixpkgs-nixos-unstable.url = github:NixOS/nixpkgs/nixos-unstable;
     nixpkgs-release.url = github:NixOS/nixpkgs/nixos-21.11;
 
-    pr-gst-plugins-bad-without-opencv.url = github:GenericNerdyUsername/nixpkgs/gst-plugins-bad-no-opencv;
-
     hercules-ci-effects.url = github:hercules-ci/hercules-ci-effects;
   };
 
