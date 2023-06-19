@@ -118,19 +118,6 @@
               });
             };
 
-            onPush.pr-gst-opencv.outputs = {
-              outputs =
-                let
-                  system = "x86_64-linux";
-                  input = "pr-gst-plugins-bad-without-opencv";
-                  jobs = import ./nix/jobs.nix {
-                    inherit system;
-                    nixpkgs = inputs.${input};
-                  };
-                in
-                jobs.checks;
-            };
-
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
             onSchedule."master, no overlays, arches: 8_6" = {
               when.hour = [ 0 2 20 22 ];
