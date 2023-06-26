@@ -29,6 +29,12 @@ let
           cudaSupport = true;
         };
 
+        # https://github.com/NixOS/nixpkgs/issues/239182
+        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: {
+          cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
+        });
+
+
         ucx = prev.ucx.override {
           enableCuda = true;
         };
