@@ -37,7 +37,7 @@ With the above in mind, let's proceed.
     - [`master`](https://github.com/NixOS/nixpkgs/tree/master/),
     - [`nixos-unstable`](https://github.com/NixOS/nixpkgs/tree/nixos-unstable),
     - [`nixpkgs-unstable`](https://github.com/NixOS/nixpkgs/tree/nixpkgs-unstable),
-    - and the last release, at the time of writing - `nixos-21.11`
+    - and the last release, at the time of writing - `nixos-23.05`
 
     We might build different branches at different frequency. We also might
     prioritize certain `cudaCapabilities`.
