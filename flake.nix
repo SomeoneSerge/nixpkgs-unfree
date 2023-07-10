@@ -7,7 +7,7 @@
     nixpkgs-master.url = github:NixOS/nixpkgs/master;
     nixpkgs-nixpkgs-unstable.url = github:NixOS/nixpkgs/nixpkgs-unstable;
     nixpkgs-nixos-unstable.url = github:NixOS/nixpkgs/nixos-unstable;
-    nixpkgs-release.url = github:NixOS/nixpkgs/nixos-21.11;
+    nixpkgs-release.url = github:NixOS/nixpkgs/nixos-23.05;
 
     hercules-ci-effects.url = github:hercules-ci/hercules-ci-effects;
   };
