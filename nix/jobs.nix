@@ -42,6 +42,7 @@ let
     [ "nccl" ]
     [ "opencv" ]
     [ "openmpi" ]
+    [ "openmvs" ]
     [ "ucx" ]
 
     [ "cholmod-extra" ]
@@ -49,8 +50,6 @@ let
     [ "suitesparse" ]
     [ "truecrack-cuda" ]
     [ "xgboost" ]
-
-    [ "opensfm" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "ffmpeg-full" ]
@@ -98,6 +97,7 @@ let
             "TheanoWithCuda"
             "tiny-cuda-nn"
             "torch"
+            "torchaudio"
             "torchvision"
             "tts"
           ] ++ [
@@ -175,6 +175,7 @@ let
         "jax"
         "jaxlib"
         "opencv4"
+        "opensfm"
         "tensorflowWithCuda"
         "torch"
         "torchvision"
