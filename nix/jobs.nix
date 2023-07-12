@@ -42,7 +42,6 @@ let
     [ "nccl" ]
     [ "opencv" ]
     [ "openmpi" ]
-    [ "openmvs" ]
     [ "ucx" ]
 
     [ "cholmod-extra" ]
@@ -50,6 +49,16 @@ let
     [ "suitesparse" ]
     [ "truecrack-cuda" ]
     [ "xgboost" ]
+    [ "cctag" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "lightgbm" ]
+    [ "openmvs" ]
+    [ "openmvg" ]
+    [ "openvino" ]
+    [ "opentrack" ]
+    [ "rtabmap" ]
+    [ "monado" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "pixinsight" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "obs-studio-plugins" "obs-backgroundremoval" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "ffmpeg-full" ]
@@ -57,6 +66,9 @@ let
     [ "gst_all_1" "gst-plugins-bad" ]
     [ "meshlab" ]
     [ "qgis" ]
+    [ "saga" ]
+    [ "deepin" "image-editor" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "ueberzugpp" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
 
     [ "linuxPackages" "nvidia_x11" ]
     [ "linuxPackages" "nvidia_x11_beta" ]
@@ -100,6 +112,18 @@ let
             "torchaudio"
             "torchvision"
             "tts"
+            "boxx"
+            "bpycv"
+            "ffmpeg-full"
+            "gpt-2-simple"
+            "grad-cam"
+            "kornia"
+            "mmcv"
+            "noisetorch"
+            "spacy-transformers"
+            "tesserocr"
+            "transformers"
+            "vidstab"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
