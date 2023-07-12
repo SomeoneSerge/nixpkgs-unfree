@@ -44,30 +44,30 @@ let
     [ "openmpi" ]
     [ "ucx" ]
 
+    [ "cctag" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
     [ "cholmod-extra" ]
     [ "gpu-screen-recorder" ]
+    [ "lightgbm" ]
+    [ "monado" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "obs-studio-plugins" "obs-backgroundremoval" ]
+    [ "openmvg" ]
+    [ "openmvs" ]
+    [ "opentrack" ]
+    [ "openvino" ]
+    [ "pixinsight" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
+    [ "rtabmap" ]
     [ "suitesparse" ]
     [ "truecrack-cuda" ]
     [ "xgboost" ]
-    [ "cctag" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
-    [ "lightgbm" ]
-    [ "openmvs" ]
-    [ "openmvg" ]
-    [ "openvino" ]
-    [ "opentrack" ]
-    [ "rtabmap" ]
-    [ "monado" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
-    [ "pixinsight" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
-    [ "obs-studio-plugins" "obs-backgroundremoval" ]
 
     # GUI and similar mess, but desirable to have in cache:
+    [ "deepin" "image-editor" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
     [ "ffmpeg-full" ]
     [ "gimp" ]
     [ "gst_all_1" "gst-plugins-bad" ]
     [ "meshlab" ]
     [ "qgis" ]
     [ "saga" ]
-    [ "deepin" "image-editor" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
     [ "ueberzugpp" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
 
     [ "linuxPackages" "nvidia_x11" ]
@@ -81,19 +81,28 @@ let
       matrix = lib.cartesianProductOfSets
         {
           pkg = [
+            "Keras"
+            "TheanoWithCuda"
+            "boxx"
+            "bpycv"
             "caffe"
             "catboost"
             "chainer"
             "cupy"
             "faiss"
+            "ffmpeg-full"
             "flax"
             "functorch"
+            "gpt-2-simple"
+            "grad-cam"
             "jax"
             "jaxlib"
             "jaxlib"
-            "Keras"
+            "kornia"
             "libgpuarray"
+            "mmcv"
             "mxnet"
+            "noisetorch"
             "onnx"
             "openai-triton"
             "openai-whisper"
@@ -102,27 +111,18 @@ let
             "pyrealsense2WithCuda"
             "pytorch"
             "pytorch-lightning"
-            "scikitimage"
             "scikit-learn" # makes sure it's cached with MKL
+            "scikitimage"
+            "spacy-transformers"
             "tensorflow-probability"
             "tensorflowWithCuda"
-            "TheanoWithCuda"
+            "tesserocr"
             "tiny-cuda-nn"
             "torch"
             "torchaudio"
             "torchvision"
-            "tts"
-            "boxx"
-            "bpycv"
-            "ffmpeg-full"
-            "gpt-2-simple"
-            "grad-cam"
-            "kornia"
-            "mmcv"
-            "noisetorch"
-            "spacy-transformers"
-            "tesserocr"
             "transformers"
+            "tts"
             "vidstab"
           ] ++ [
             # These need to be rebuilt because of MKL
