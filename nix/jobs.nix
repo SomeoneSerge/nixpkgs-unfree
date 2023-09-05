@@ -196,12 +196,15 @@ let
       );
       latestPython = "python3Packages";
       pyPackages = [
+        "imageio-ffmpeg"
         "jax"
         "jaxlib"
+        "kornia"
         "opencv4"
         "opensfm"
         "tensorflowWithCuda"
         "torch"
+        "torchaudio"
         "torchvision"
       ];
       matrixPy = lib.cartesianProductOfSets {
