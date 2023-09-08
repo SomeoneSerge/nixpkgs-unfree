@@ -59,6 +59,7 @@ let
     [ "suitesparse" ]
     [ "truecrack-cuda" ]
     [ "xgboost" ]
+    [ "wyoming-faster-whisper" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "deepin" "image-editor" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
@@ -124,7 +125,6 @@ let
             "transformers"
             "tts"
             "vidstab"
-            "wyoming-faster-whisper"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
