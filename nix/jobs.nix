@@ -124,6 +124,7 @@ let
             "transformers"
             "tts"
             "vidstab"
+            "wyoming-faster-whisper"
           ] ++ [
             # These need to be rebuilt because of MKL
             "numpy"
