@@ -4,12 +4,21 @@
   inputs = {
     nixpkgs.follows = "nixpkgs-master";
 
+    # Which revisions to build, NB the nixpkgs-$branch pattern
     nixpkgs-master.url = github:NixOS/nixpkgs/master;
     nixpkgs-nixpkgs-unstable.url = github:NixOS/nixpkgs/nixpkgs-unstable;
     nixpkgs-nixos-unstable.url = github:NixOS/nixpkgs/nixos-unstable;
     nixpkgs-release.url = github:NixOS/nixpkgs/nixos-23.05;
 
-    hercules-ci-effects.url = github:hercules-ci/hercules-ci-effects;
+    hercules-ci-effects = {
+      url = "github:hercules-ci/hercules-ci-effects";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {
