@@ -46,6 +46,7 @@ let
 
     [ "cctag" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
     [ "cholmod-extra" ]
+    [ "ctranslate2" ]
     [ "gpu-screen-recorder" ]
     [ "lightgbm" ]
     [ "monado" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
@@ -91,6 +92,7 @@ let
             "chainer"
             "cupy"
             "faiss"
+            "faster-whisper"
             "ffmpeg-full"
             "flax"
             "functorch"
