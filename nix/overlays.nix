@@ -34,7 +34,6 @@ let
           cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
         });
 
-
         ucx = prev.ucx.override {
           enableCuda = true;
         };
