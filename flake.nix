@@ -259,6 +259,23 @@
                 in
                 jobs.checks;
             };
+            onSchedule."master; subset: faster-whisper; arches: 5.2+PTX" = {
+              when.dayOfWeek = [ "Wed" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  input = "nixpkgs-master";
+                  nixpkgs = inputs.${input};
+                  pkgs = import nixpkgs {
+                    inherit system;
+                    config.cudaSupport = true;
+                    config.cudaCapabilities = [ "5.2" ];
+                  };
+                in
+                {
+                  faster-whisper = pkgs.python3Packages.faster-whisper;
+                };
+            };
           };
       });
 }
