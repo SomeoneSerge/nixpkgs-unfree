@@ -128,7 +128,7 @@
             };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
-            onSchedule."master, no overlays, arches: 8_6" = {
+            onSchedule."branch: master; subset: small; overlays: no; arches: 8.6+PTX" = {
               when.hour = [ 0 2 20 22 ];
               outputs =
                 let
@@ -143,7 +143,7 @@
                 in
                 jobs.neverBreak;
             };
-            onSchedule."master, mkl overlay, arches: 8_6" = {
+            onSchedule."branch: master; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
               when.hour = [ 21 ];
               outputs =
                 let
@@ -160,7 +160,7 @@
             };
 
             # Build pytorch&c with default capabilities, daily
-            onSchedule."master, no overlays, arches: all" = {
+            onSchedule."branch: master; subset: small; overlays: no; arches: all" = {
               when.hour = [ 3 ];
               outputs =
                 let
@@ -174,7 +174,7 @@
                 jobs.neverBreak;
             };
 
-            onSchedule."master, mkl overlay, arches: all" = {
+            onSchedule."branch: master; subset: huge: overlays: mkl; arches: all" = {
               when.hour = [ 21 ];
               when.dayOfWeek = [ "Fri" ];
               outputs =
@@ -231,7 +231,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."nixos-unstable, mkl overlay, arches: 8_6" = {
+            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
               when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
@@ -245,7 +245,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."nixos-unstable, mkl overlay, arches: 8_0" = {
+            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: 8.0+PTX" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -259,7 +259,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."master; subset: faster-whisper; arches: 5.2+PTX" = {
+            onSchedule."branch: master; subset: faster-whisper; arches: 5.2+PTX" = {
               when.dayOfWeek = [ "Wed" ];
               outputs =
                 let
