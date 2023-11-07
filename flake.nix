@@ -160,7 +160,7 @@
             };
 
             # Build pytorch&c with default capabilities, daily
-            onSchedule."branch: master; subset: small; overlays: no; arches: all" = {
+            onSchedule."branch: master; subset: small; overlays: no; arches: default (many)" = {
               when.hour = [ 3 ];
               outputs =
                 let
@@ -174,7 +174,7 @@
                 jobs.neverBreak;
             };
 
-            onSchedule."branch: master; subset: huge: overlays: mkl; arches: all" = {
+            onSchedule."branch: master; subset: huge: overlays: mkl; arches: default (many)" = {
               when.hour = [ 21 ];
               when.dayOfWeek = [ "Fri" ];
               outputs =
@@ -191,7 +191,7 @@
 
             # Default cudaCapabilities
 
-            onSchedule."nixpkgs-unstable, mkl overlay, arches: all" = {
+            onSchedule."branch: nixpkgs-unstable; subset: huge; overlays: mkl; arches: default (many)" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -204,7 +204,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."nixos-unstable, mkl overlay, arches: all" = {
+            onSchedule."branch: nixos-unstable; overlays: mkl; arches: default (many)" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -217,7 +217,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."nixpkgs-unstable, mkl overlay, arches: 8_6" = {
+            onSchedule."branch: nixpkgs-unstable; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
