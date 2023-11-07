@@ -259,12 +259,12 @@
                 in
                 jobs.checks;
             };
-            onSchedule."branch: master; subset: faster-whisper; arches: 5.2+PTX" = {
+            onSchedule."branch: nixos-unstable; subset: faster-whisper; arches: 5.2+PTX" = {
               when.dayOfWeek = [ "Wed" ];
               outputs =
                 let
                   system = "x86_64-linux";
-                  input = "nixpkgs-master";
+                  input = "nixpkgs-nixos-unstable";
                   nixpkgs = inputs.${input};
                   pkgs = import nixpkgs {
                     inherit system;
@@ -274,7 +274,9 @@
                   };
                 in
                 {
+                  torch = pkgs.python3Packages.torch;
                   faster-whisper = pkgs.python3Packages.faster-whisper;
+                  faster-whisper-server = pkgs.wyoming-faster-whisper;
                 };
             };
           };
