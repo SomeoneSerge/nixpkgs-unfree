@@ -268,6 +268,7 @@
                   nixpkgs = inputs.${input};
                   pkgs = import nixpkgs {
                     inherit system;
+                    config.allowUnfree = true;
                     config.cudaSupport = true;
                     config.cudaCapabilities = [ "5.2" ];
                   };
