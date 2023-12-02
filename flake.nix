@@ -189,6 +189,21 @@
                 jobs.checks;
             };
 
+            onSchedule."branch: latest release; subset: huge: overlays: mkl; arches: default (many)" = {
+              when.hour = [ 21 ];
+              when.dayOfWeek = [ "Thu" ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  input = "nixpkgs-release";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                in
+                jobs.checks;
+            };
+
             # Default cudaCapabilities
 
             onSchedule."branch: nixpkgs-unstable; subset: huge; overlays: mkl; arches: default (many)" = {
