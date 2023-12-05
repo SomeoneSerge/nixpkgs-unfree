@@ -45,11 +45,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1701807173,
-        "narHash": "sha256-pLaojWW1x7Mv0E1mE7VpYsdDOAcILhn/+mZEECRXsxc=",
+        "lastModified": 1701812053,
+        "narHash": "sha256-vFL4wWrdDWNlwYvugyQ8gSmoxHQzOYpoM7bdfgKUUP8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3bc050455c6fd32d153f823ebc469c05883e3a51",
+        "rev": "6a937597be7852efba210335c02596e0a33098d8",
         "type": "github"
       },
       "original": {
@@ -107,6 +107,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-release-staging": {
+      "locked": {
+        "lastModified": 1701789017,
+        "narHash": "sha256-y013yeOiGXDAqFq+Gw+ADZ8aZGYr1iSPSvRa7xOUdec=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d63c6c91dfd9fd1d13204c4521562bac1a5575c9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "staging-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -117,7 +133,8 @@
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-nixos-unstable": "nixpkgs-nixos-unstable",
         "nixpkgs-nixpkgs-unstable": "nixpkgs-nixpkgs-unstable",
-        "nixpkgs-release": "nixpkgs-release"
+        "nixpkgs-release": "nixpkgs-release",
+        "nixpkgs-release-staging": "nixpkgs-release-staging"
       }
     }
   },
