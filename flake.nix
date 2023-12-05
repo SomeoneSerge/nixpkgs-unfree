@@ -5,11 +5,11 @@
     nixpkgs.follows = "nixpkgs-master";
 
     # Which revisions to build, NB the nixpkgs-$branch pattern
-    nixpkgs-master.url = github:NixOS/nixpkgs/master;
-    nixpkgs-nixpkgs-unstable.url = github:NixOS/nixpkgs/nixpkgs-unstable;
-    nixpkgs-nixos-unstable.url = github:NixOS/nixpkgs/nixos-unstable;
-    nixpkgs-release.url = github:NixOS/nixpkgs/nixos-23.11;
-    nixpkgs-release-staging.url = github:NixOS/nixpkgs/staging-23.11;
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    nixpkgs-nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-release.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-release-staging.url = "github:NixOS/nixpkgs/staging-23.11";
 
     hercules-ci-effects = {
       url = "github:hercules-ci/hercules-ci-effects";
