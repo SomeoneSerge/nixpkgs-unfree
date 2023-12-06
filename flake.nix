@@ -83,6 +83,8 @@
             x = eachSystem (system:
               import ./nix/jobs.nix {
                 inherit system nixpkgs lib;
+                extraConfig.cudaCapabilities = [ "7.0" "8.0" "8.6" ];
+                extraConfig.cudaEnableForwardCompat = false;
               }
             );
           in
@@ -129,7 +131,7 @@
             };
 
             # Cf. https://docs.hercules-ci.com/hercules-ci-agent/evaluation#attributes-herculesCI.onSchedule-when
-            onSchedule."branch: master; subset: small; overlays: no; arches: 8.6+PTX" = {
+            onSchedule."branch: master; subset: small; overlays: no; arches: 8.6; reason: reused for nixpkgs-review" = {
               when.hour = [ 0 2 20 22 ];
               outputs =
                 let
@@ -139,12 +141,15 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
-                    extraConfig = { inherit cudaCapabilities; };
+                    extraConfig = {
+                      inherit cudaCapabilities;
+                      cudaEnableForwardCompat = false;
+                    };
                   };
                 in
                 jobs.neverBreak;
             };
-            onSchedule."branch: master; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
+            onSchedule."branch: master; subset: huge; overlays: mkl; arches: 8.6" = {
               when.hour = [ 21 ];
               outputs =
                 let
@@ -154,7 +159,10 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
-                    extraConfig = { inherit cudaCapabilities; };
+                    extraConfig = {
+                      inherit cudaCapabilities;
+                      cudaEnableForwardCompat = false;
+                    };
                   };
                 in
                 jobs.checks;
@@ -247,7 +255,7 @@
                 in
                 jobs.checks;
             };
-            onSchedule."branch: nixpkgs-unstable; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
+            onSchedule."branch: nixpkgs-unstable; subset: huge; overlays: mkl; arches: 8.6; reason: reused for nixpkgs-review" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -257,11 +265,12 @@
                     inherit system;
                     nixpkgs = inputs.${input};
                     extraConfig.cudaCapabilities = [ "8.6" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
                 in
                 jobs.checks;
             };
-            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: 8.6+PTX" = {
+            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: 8.6; reason: reused for nixpkgs-review" = {
               when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
@@ -271,11 +280,42 @@
                     inherit system;
                     nixpkgs = inputs.${input};
                     extraConfig.cudaCapabilities = [ "8.6" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
                 in
                 jobs.checks;
             };
-            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: 8.0+PTX" = {
+            onSchedule."branch: master; subset: small; overlays: none; arches: [ 7.0, 8.0, 8.6 ]; reason: Aalto Triton + RTX3090" = {
+              when.hour = [ 1 17 ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  input = "nixpkgs-master";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "7.0" "8.0" "8.6" ];
+                    extraConfig.cudaEnableForwardCompat = false;
+                  };
+                in
+                jobs.neverBreak;
+            };
+            onSchedule."branch: nixos-unstable; subset: small; overlays: none; arches: [ 7.0, 8.0, 8.6 ]; reason: Aalto Triton + RTX3090" = {
+              when.hour = [ 3 21 ];
+              outputs =
+                let
+                  system = "x86_64-linux";
+                  input = "nixpkgs-nixos-unstable";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "7.0" "8.0" "8.6" ];
+                    extraConfig.cudaEnableForwardCompat = false;
+                  };
+                in
+                jobs.neverBreak;
+            };
+            onSchedule."branch: nixos-unstable; subset: huge; overlays: mkl; arches: [ 7.0, 8.0, 8.6 ]; reason: Aalto Triton + RTX3090" = {
               when.dayOfWeek = [ "Sat" ];
               outputs =
                 let
@@ -284,7 +324,8 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
-                    extraConfig.cudaCapabilities = [ "8.0" ];
+                    extraConfig.cudaCapabilities = [ "7.0" "8.0" "8.6" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
                 in
                 jobs.checks;
