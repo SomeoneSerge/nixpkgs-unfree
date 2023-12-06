@@ -42,7 +42,7 @@
           enable = true;
           when = {
             minute = 30;
-            hour = [ 2 19 ];
+            hour = [ 2 7 12 17 22 ];
           };
           autoMergeMethod = "rebase";
 
