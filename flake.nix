@@ -179,9 +179,9 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "8.7" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
-                  extraConfig.cudaCapabilities = [ "8.7" ];
-                  extraConfig.cudaEnableForwardCompat = false;
                 in
                 jobs.neverBreak;
             };
@@ -195,9 +195,9 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "7.2" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
-                  extraConfig.cudaCapabilities = [ "7.2" ];
-                  extraConfig.cudaEnableForwardCompat = false;
                 in
                 jobs.neverBreak;
             };
@@ -211,9 +211,9 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "6.2" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
-                  extraConfig.cudaCapabilities = [ "6.2" ];
-                  extraConfig.cudaEnableForwardCompat = false;
                 in
                 jobs.neverBreak;
             };
@@ -227,9 +227,9 @@
                   jobs = import ./nix/jobs.nix {
                     inherit system;
                     nixpkgs = inputs.${input};
+                    extraConfig.cudaCapabilities = [ "5.3" ];
+                    extraConfig.cudaEnableForwardCompat = false;
                   };
-                  extraConfig.cudaCapabilities = [ "5.3" ];
-                  extraConfig.cudaEnableForwardCompat = false;
                 in
                 jobs.neverBreak;
             };
