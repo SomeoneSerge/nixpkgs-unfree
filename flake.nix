@@ -170,6 +170,70 @@
                 jobs.neverBreak;
             };
 
+            onSchedule."branch: master; subset: small; overlays: no; arches: jetson orin" = {
+              when.hour = [ 5 ];
+              outputs =
+                let
+                  system = "aarch64-linux";
+                  input = "nixpkgs-master";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                  extraConfig.cudaCapabilities = [ "8.7" ];
+                  extraConfig.cudaEnableForwardCompat = false;
+                in
+                jobs.neverBreak;
+            };
+
+            onSchedule."branch: master; subset: small; overlays: no; arches: jetson xavier" = {
+              when.hour = [ 6 ];
+              outputs =
+                let
+                  system = "aarch64-linux";
+                  input = "nixpkgs-master";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                  extraConfig.cudaCapabilities = [ "7.2" ];
+                  extraConfig.cudaEnableForwardCompat = false;
+                in
+                jobs.neverBreak;
+            };
+
+            onSchedule."branch: master; subset: small; overlays: no; arches: jetson tx2" = {
+              when.hour = [ 7 ];
+              outputs =
+                let
+                  system = "aarch64-linux";
+                  input = "nixpkgs-master";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                  extraConfig.cudaCapabilities = [ "6.2" ];
+                  extraConfig.cudaEnableForwardCompat = false;
+                in
+                jobs.neverBreak;
+            };
+
+            onSchedule."branch: master; subset: small; overlays: no; arches: jetson nano" = {
+              when.hour = [ 8 ];
+              outputs =
+                let
+                  system = "aarch64-linux";
+                  input = "nixpkgs-master";
+                  jobs = import ./nix/jobs.nix {
+                    inherit system;
+                    nixpkgs = inputs.${input};
+                  };
+                  extraConfig.cudaCapabilities = [ "5.3" ];
+                  extraConfig.cudaEnableForwardCompat = false;
+                in
+                jobs.neverBreak;
+            };
+
             onSchedule."branch: master; subset: huge: overlays: mkl; arches: default (many)" = {
               when.hour = [ 21 ];
               when.dayOfWeek = [ "Fri" ];
