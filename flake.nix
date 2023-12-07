@@ -50,10 +50,6 @@
           createPullRequest = false;
           updateBranch = "develop";
         };
-        hercules-ci.github-pages = {
-          branch = "develop";
-          pushJob = "gh-pages";
-        };
         flake =
           let
 
