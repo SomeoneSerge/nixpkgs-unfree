@@ -167,7 +167,7 @@
             };
 
             onSchedule."branch: master; subset: small; overlays: no; arches: jetson orin" = {
-              when.hour = [ 5 ];
+              when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
                   system = "aarch64-linux";
@@ -183,7 +183,7 @@
             };
 
             onSchedule."branch: master; subset: small; overlays: no; arches: jetson xavier" = {
-              when.hour = [ 6 ];
+              when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
                   system = "aarch64-linux";
@@ -199,7 +199,7 @@
             };
 
             onSchedule."branch: master; subset: small; overlays: no; arches: jetson tx2" = {
-              when.hour = [ 7 ];
+              when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
                   system = "aarch64-linux";
@@ -215,7 +215,7 @@
             };
 
             onSchedule."branch: master; subset: small; overlays: no; arches: jetson nano" = {
-              when.hour = [ 8 ];
+              when.dayOfWeek = [ "Fri" ];
               outputs =
                 let
                   system = "aarch64-linux";
