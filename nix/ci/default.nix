@@ -1,8 +1,8 @@
 {
-  withSystem,
-  lib,
   config,
   inputs,
+  lib,
+  withSystem,
   ...
 }:
 let
@@ -65,21 +65,7 @@ in
               "aarch64-linux"
             ];
           };
-          when = mkOption {
-            description = "When to build";
-            type = types.submodule {
-              options = {
-                dayOfWeek = mkOption {
-                  description = "Days of week to build";
-                  type = types.nonEmptyListOf types.str;
-                };
-                hour = mkOption {
-                  description = "Hours of day to build";
-                  type = types.nonEmptyListOf types.ints.positive;
-                };
-              };
-            };
-          };
+          when = (import "${inputs.hercules-ci-effects}/flake-modules/types/when.nix" {inherit lib;}).option;
         };
       }
     );
