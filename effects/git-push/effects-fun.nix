@@ -1,6 +1,6 @@
 { config
-, inputs
 , lib
+, pkgs
 , ...
 }:
 
@@ -28,9 +28,6 @@ let
   destination = parseURL cfg.destination.url;
 in
 {
-  imports = [
-    inputs.hercules-ci-effects.modules.effect.git
-  ];
   options = {
     git.push.user = mkOption {
       description = ''
@@ -97,6 +94,17 @@ in
     env.HCI_GIT_DESTINATION_URL = cfg.destination.url;
     env.HCI_GIT_DESTINATION_REF = cfg.destination.ref;
     env.HCI_GIT_PUSH_FORCE = optionalString cfg.force "--force";
+
+    # Copy-pasted from https://github.com/hercules-ci/hercules-ci-effects/blob/15ff4f63e5f28070391a5b09a82f6d5c6cc5c9d0/effects/modules/git.nix
+    inputs = [
+      pkgs.git
+    ];
+    env = {
+      EMAIL = "hercules-ci[bot]@users.noreply.github.com";
+      GIT_AUTHOR_NAME = "Hercules CI Effects";
+      GIT_COMMITTER_NAME = "Hercules CI Effects";
+      PAGER = "cat";
+    };
 
     effectScript = ''
       # Based on https://github.com/hercules-ci/hercules-ci-effects/blob/15ff4f63e5f28070391a5b09a82f6d5c6cc5c9d0/effects/modules/git-auth.nix#L73-L74
