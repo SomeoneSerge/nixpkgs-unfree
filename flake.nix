@@ -261,7 +261,7 @@
 
             onSchedule."branch: latest release; subset: huge: overlays: mkl; arches: default (many)" = {
               when.hour = [ 21 ];
-              when.dayOfWeek = [ "Thu" ];
+              when.dayOfWeek = [ "Tue" "Fri" "Sun" ];
               outputs =
                 let
                   system = "x86_64-linux";
