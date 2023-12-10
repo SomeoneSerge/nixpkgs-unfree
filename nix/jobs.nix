@@ -194,7 +194,15 @@ let
     let
       pkgs = nixpkgsInstances.basic;
       cuPackages = lib.attrNames (
-        lib.filterAttrs isSupportedCuPackage
+        lib.filterAttrs
+          (name: value: (isSupportedCuPackage name value)
+            || builtins.elem name [
+            "saxpy"
+            "cuda-samples"
+            "cuda_nvcc"
+            "cuda_cuobjdump"
+            "cuda_cudart"
+          ])
           pkgs.cudaPackages
       );
       latestPython = "python3Packages";
