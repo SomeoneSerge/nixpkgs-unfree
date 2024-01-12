@@ -43,6 +43,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-cuda-updates": {
+      "locked": {
+        "lastModified": 1705021979,
+        "narHash": "sha256-1NlEArrLUdmNbzuxLY8fQ/NZxE6OQA4fTWEchqldhOg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "640bd65de36bce0e15794e6605e688133b85c1e5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "cuda-updates",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-master": {
       "locked": {
         "lastModified": 1705013512,
@@ -130,6 +146,7 @@
         "nixpkgs": [
           "nixpkgs-master"
         ],
+        "nixpkgs-cuda-updates": "nixpkgs-cuda-updates",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-nixos-unstable": "nixpkgs-nixos-unstable",
         "nixpkgs-nixpkgs-unstable": "nixpkgs-nixpkgs-unstable",

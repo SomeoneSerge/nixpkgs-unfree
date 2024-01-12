@@ -10,6 +10,7 @@
     nixpkgs-nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-release.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-release-staging.url = "github:NixOS/nixpkgs/staging-23.11";
+    nixpkgs-cuda-updates.url = "github:NixOS/nixpkgs/cuda-updates";
 
     hercules-ci-effects = {
       url = "github:hercules-ci/hercules-ci-effects";

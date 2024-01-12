@@ -16,6 +16,7 @@ in
     ./cuda-x86_64-linux.nix
     ./pytorch.nix
     ./whisper.nix
+    ./cuda-updates.nix
   ];
   options.hci.jobSets = mkOption {
     description = "Job sets to build";
