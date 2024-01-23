@@ -1,6 +1,7 @@
 { debug ? false
 }:
 rec {
+  optionals = cond: lst: assert builtins.isBool cond; assert builtins.isList lst; if cond then lst else [ ];
   optionalString = cond: str: if cond then str else "";
 
   # nixpkgs' lib.lists.toList
@@ -16,18 +17,10 @@ rec {
 
   trace = if debug then builtins.trace else (msg: value: value);
 
-  # cf. Tweaked version of nixpkgs/maintainers/scripts/check-hydra-by-maintainer.nix
+  # This used to be a tryEval-based routine similar to nixpkgs/maintainers/scripts/check-hydra-by-maintainer.nix
+  # Now we only respect `platforms`/`badPlatforms`, not `broken`.
   maybeBuildable = v:
-    let result = builtins.tryEval
-      (
-        if isDerivation v then
-        # Skip packages whose closure fails on evaluation.
-        # This happens for pkgs like `python27Packages.djangoql`
-        # that have disabled Python pkgs as dependencies.
-          builtins.seq v.outPath [ v ]
-        else [ ]
-      );
-    in if result.success then result.value else [ ];
+    optionals (!(v.meta.unsupported or false)) [ v ];
 
   # removed packages (like cudatoolkit_6) are just aliases that `throw`:
   notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
