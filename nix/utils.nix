@@ -66,11 +66,13 @@ rec {
     && (builtins.any (p: hasPrefix p name) cuPrefixae);
   isSupportedCuPackage = name: drv: (isCuPackage name drv) && !builtins.elem name unsupportedCuPackages;
 
+  resultToString = { success, value }: optionalString success value;
+
   dedupOutpaths = nameDrvPairs:
     let
-      outPathToPair = builtins.groupBy (pair: (builtins.unsafeDiscardStringContext (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath)).result or "BROKEN")) nameDrvPairs;
+      outPathToPair = builtins.groupBy (pair: resultToString (builtins.unsafeDiscardStringContext (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath)))) nameDrvPairs;
       groupedPairs = builtins.attrValues outPathToPair;
       uniquePairs = builtins.map builtins.head groupedPairs;
     in
-    builtins.filter ({ name, value }: name != "BROKEN") uniquePairs;
+    builtins.filter ({ name, value }: name != "") uniquePairs;
 }
