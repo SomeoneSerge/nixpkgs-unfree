@@ -95,7 +95,6 @@ let
             "faster-whisper"
             "ffmpeg-full"
             "flax"
-            "functorch"
             "gpt-2-simple"
             "grad-cam"
             "jax"
