@@ -20,7 +20,7 @@ rec {
   # This used to be a tryEval-based routine similar to nixpkgs/maintainers/scripts/check-hydra-by-maintainer.nix
   # Now we only respect `platforms`/`badPlatforms`, not `broken`.
   maybeBuildable = v:
-    optionals (v?outPath && !(v.meta.unsupported or false)) [ v ];
+    optionals (isDerivation v && !(v.meta.unsupported or false)) [ v ];
 
   # removed packages (like cudatoolkit_6) are just aliases that `throw`:
   notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
