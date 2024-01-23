@@ -70,7 +70,7 @@ rec {
 
   dedupOutpaths = nameDrvPairs:
     let
-      outPathToPair = builtins.groupBy (pair: resultToString (builtins.unsafeDiscardStringContext (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath)))) nameDrvPairs;
+      outPathToPair = builtins.groupBy (pair: (builtins.unsafeDiscardStringContext (resultToString (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath))))) nameDrvPairs;
       groupedPairs = builtins.attrValues outPathToPair;
       uniquePairs = builtins.map builtins.head groupedPairs;
     in
