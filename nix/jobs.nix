@@ -49,8 +49,11 @@ let
     [ "ctranslate2" ]
     [ "gpu-screen-recorder" ]
     [ "lightgbm" ]
+    [ "llama-cpp" ]
     [ "monado" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
     [ "obs-studio-plugins" "obs-backgroundremoval" ]
+    [ "ollama" ]
+    [ "onnxruntime" ]
     [ "openmvg" ]
     [ "openmvs" ]
     [ "opentrack" ]
@@ -59,8 +62,8 @@ let
     [ "rtabmap" ]
     [ "suitesparse" ]
     [ "truecrack-cuda" ]
-    [ "xgboost" ]
     [ "wyoming-faster-whisper" ]
+    [ "xgboost" ]
 
     # GUI and similar mess, but desirable to have in cache:
     [ "deepin" "image-editor" ] # Failed in https://github.com/NixOS/nixpkgs/pull/233581
