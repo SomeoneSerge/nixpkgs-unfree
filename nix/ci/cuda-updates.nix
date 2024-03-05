@@ -23,6 +23,7 @@ in
       when.dayOfWeek = allWeek;
     };
     default-cuda-updates-daily = {
+      jobsAttr = "neverBreak";
       reason = "staging mass rebuilds";
       system = "x86_64-linux";
       branch = "master";
