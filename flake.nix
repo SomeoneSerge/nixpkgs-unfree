@@ -40,18 +40,6 @@
           ./nix/ci
         ];
         systems = [ "x86_64-linux" ];
-        hercules-ci.flake-update = {
-          enable = true;
-          when = {
-            minute = 30;
-            hour = [ 2 7 12 17 22 ];
-          };
-          autoMergeMethod = "rebase";
-
-          # Don't create PRs in flake-update, instead push to master
-          createPullRequest = false;
-          updateBranch = "develop";
-        };
         flake =
           let
 
