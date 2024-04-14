@@ -30,7 +30,7 @@ let
         };
 
         # https://github.com/NixOS/nixpkgs/issues/239182
-        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: {
+        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: prev.lib.optionalAttrs ((prev.lib.functionArgs pre.cudatoolkit.override) ? ucx) {
           cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
         });
 
