@@ -99,6 +99,7 @@ let
           overlay =
             if versionOlder release "21.12" then "21.11"
             else if versionOlder release "22.06" then "22.05"
+            else if versionOlder release "24.05" then "24.05"
             else throw "Unsuported nixpkgs release: ${release}";
         in
         optionalAttrs (!dontOverride) overlays.${overlay}
