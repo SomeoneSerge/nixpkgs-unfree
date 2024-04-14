@@ -6,6 +6,8 @@ let
   utils = import ./utils.nix;
 
   checks = ci.onSchedule.buildMasterAmpereMatrix.outputs;
-  paths = lib.mapAttrs (name: drv: "${name} -> ${builtins.unsafeDiscardStringContext drv.outPath}") checks;
+  paths = lib.mapAttrs (
+    name: drv: "${name} -> ${builtins.unsafeDiscardStringContext drv.outPath}"
+  ) checks;
 in
 paths

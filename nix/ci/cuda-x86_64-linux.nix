@@ -1,7 +1,7 @@
 let
   sm_86-checks = {
     cuda = {
-      capabilities = ["8.6"];
+      capabilities = [ "8.6" ];
       forwardCompat = false;
     };
     jobsAttr = "checks";
@@ -29,40 +29,40 @@ in
     cuda-sm_86-master-daily-checks = sm_86-checks // {
       branch = "master";
       reason = "daily check";
-      when.hour = [21];
+      when.hour = [ 21 ];
     };
     cuda-sm_86-nixos-unstable-weekly-checks = sm_86-checks // {
       branch = "nixos-unstable";
-      when.dayOfWeek = ["Fri"];
+      when.dayOfWeek = [ "Fri" ];
     };
     cuda-sm_86-nixpkgs-unstable-weekly-checks = sm_86-checks // {
       branch = "nixpkgs-unstable";
-      when.dayOfWeek = ["Sat"];
+      when.dayOfWeek = [ "Sat" ];
     };
     cuda-default-release-staging-weekly-checks = default-checks // {
       branch = "release-staging";
-      when.dayOfWeek = ["Wed"];
+      when.dayOfWeek = [ "Wed" ];
     };
     cuda-default-release-daily-checks = default-checks // {
       branch = "release";
       when = {
-        hour = [21];
+        hour = [ 21 ];
       };
     };
     cuda-default-master-weekly-checks = default-checks // {
       branch = "master";
       when = {
-        dayOfWeek = ["Fri"];
-        hour = [21];
+        dayOfWeek = [ "Fri" ];
+        hour = [ 21 ];
       };
     };
     cuda-default-nixpkgs-unstable-weekly-checks = default-checks // {
       branch = "nixpkgs-unstable";
-      when.dayOfWeek = ["Sat"];
+      when.dayOfWeek = [ "Sat" ];
     };
     cuda-default-nixos-unstable-weekly-checks = default-checks // {
       branch = "nixos-unstable";
-      when.dayOfWeek = ["Sat"];
+      when.dayOfWeek = [ "Sat" ];
     };
   };
 }

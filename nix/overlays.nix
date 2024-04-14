@@ -1,20 +1,21 @@
 let
   prepareOverlay =
-    { isIntel ? false
+    {
+      isIntel ? false,
       # cud(a|nn)Version
       #
       # : Maybe String
       # Semver (<xx.yy> or <xx.yy.zz>) naming
       # the cuda or cudnn revision to set as the default
-    , cudaVersion ? null
-    , cudnnVersion ? null
+      cudaVersion ? null,
+      cudnnVersion ? null,
       # *mpiProvider*
       #
       # : Maybe String
       # If null: don't touch mpi.
       # If str: names the attribute providing mpi implementation
       # and adds a few MPISupport=true overrides in selected packages
-    , mpiProvider ? null
+      mpiProvider ? null,
     }:
     final: prev:
     let
@@ -26,56 +27,46 @@ let
       lib.optionalAttrs (versionOlder lib.version "24.05pre-git") {
         # These ignore config.cudaSupport in some releases
 
-        openmpi = prev.openmpi.override {
-          cudaSupport = true;
-        };
+        openmpi = prev.openmpi.override { cudaSupport = true; };
 
         # https://github.com/NixOS/nixpkgs/issues/239182
-        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: {
-          cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
-        });
+        cudaPackages = prev.cudaPackages.overrideScope' (
+          fin: pre: {
+            cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
+          }
+        );
 
-        ucx = prev.ucx.override {
-          enableCuda = true;
-        };
+        ucx = prev.ucx.override { enableCuda = true; };
 
-        suitesparse = prev.suitesparse.override {
-          enableCuda = true;
-        };
-
-      } // optionalAttrs overrideMpi {
+        suitesparse = prev.suitesparse.override { enableCuda = true; };
+      }
+      // optionalAttrs overrideMpi {
         mpi = final.${mpiProvider};
 
         # Instead of libfabric
-        mpich = prev.mpich.override {
-          ch4backend = final.ucx;
-        };
+        mpich = prev.mpich.override { ch4backend = final.ucx; };
 
         # TODO: pythonPackageOverrides
-        pytorchMpi = prev.python3Packages.pytorch.override {
-          MPISupport = true;
-        };
-      } // optionalAttrs isIntel
-        (
-          let
-            # Not using optionalAttrs so as to avoid infinite recursion
-            mklBlas = prev.blas.override { blasProvider = final.mkl; };
-            mklLapack = prev.lapack.override { lapackProvider = final.mkl; };
-            cond = prev.hostPlatform.is64bit;
-          in
-          {
-            blas = if cond then mklBlas else prev.blas;
-            lapack = if cond then mklLapack else prev.lapack;
-            opencvWithTbb = prev.opencv.override {
-              enableTbb = true;
-            };
-          }
-        ) //
-      (
+        pytorchMpi = prev.python3Packages.pytorch.override { MPISupport = true; };
+      }
+      // optionalAttrs isIntel (
+        let
+          # Not using optionalAttrs so as to avoid infinite recursion
+          mklBlas = prev.blas.override { blasProvider = final.mkl; };
+          mklLapack = prev.lapack.override { lapackProvider = final.mkl; };
+          cond = prev.hostPlatform.is64bit;
+        in
+        {
+          blas = if cond then mklBlas else prev.blas;
+          lapack = if cond then mklLapack else prev.lapack;
+          opencvWithTbb = prev.opencv.override { enableTbb = true; };
+        }
+      )
+      // (
         let
           dontOverride = builtins.isNull cudaVersion && builtins.isNull cudnnVersion;
 
-          versionToAttr = v: if builtins.isNull v then "" else "_${replaceChars ["."] ["_"] v}";
+          versionToAttr = v: if builtins.isNull v then "" else "_${replaceChars [ "." ] [ "_" ] v}";
           cudaAttr = versionToAttr cudaVersion;
           cudnnAttr = versionToAttr cudnnVersion;
 
@@ -88,20 +79,23 @@ let
               cudnn = final."cudnn_cudatoolkit${cudaAttr}";
               cutensor = final."cutensor_cudatoolkit${cudaAttr}";
             };
-          overlays."22.05" =
-            {
-              # Assuming Fridh's PR has been merged
-              cudaPackages = prev."cudaPackages${cudaAttr}".overrideScope' (final: prev: {
-                cudnn = final."cudnn${cudnnAttr}";
-              });
-            };
+          overlays."22.05" = {
+            # Assuming Fridh's PR has been merged
+            cudaPackages = prev."cudaPackages${cudaAttr}".overrideScope' (
+              final: prev: { cudnn = final."cudnn${cudnnAttr}"; }
+            );
+          };
 
           release = prev.lib.version;
           overlay =
-            if versionOlder release "21.12" then "21.11"
-            else if versionOlder release "22.06" then "22.05"
-            else if versionOlder release "24.05" then "24.05"
-            else throw "Unsuported nixpkgs release: ${release}";
+            if versionOlder release "21.12" then
+              "21.11"
+            else if versionOlder release "22.06" then
+              "22.05"
+            else if versionOlder release "24.05" then
+              "24.05"
+            else
+              throw "Unsuported nixpkgs release: ${release}";
         in
         optionalAttrs (!dontOverride) overlays.${overlay}
       )
@@ -115,9 +109,7 @@ in
 
   basic = prepareOverlay { };
 
-  intel = prepareOverlay {
-    isIntel = true;
-  };
+  intel = prepareOverlay { isIntel = true; };
 
   # mpich = prepareOverlay {
   #   mpiProvider = "mpich";

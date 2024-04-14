@@ -1,7 +1,12 @@
-{ debug ? false
+{
+  debug ? false,
 }:
 rec {
-  optionals = cond: lst: assert builtins.isBool cond; assert builtins.isList lst; if cond then lst else [ ];
+  optionals =
+    cond: lst:
+    assert builtins.isBool cond;
+    assert builtins.isList lst;
+    if cond then lst else [ ];
   optionalString = cond: str: if cond then str else "";
 
   # nixpkgs' lib.lists.toList
@@ -12,28 +17,25 @@ rec {
     # Prefix to check for
     pref:
     # Input string
-    str: builtins.substring 0 (builtins.stringLength pref) str == pref;
-
+    str:
+    builtins.substring 0 (builtins.stringLength pref) str == pref;
 
   trace = if debug then builtins.trace else (msg: value: value);
 
   # This used to be a tryEval-based routine similar to nixpkgs/maintainers/scripts/check-hydra-by-maintainer.nix
   # Now we only respect `platforms`/`badPlatforms`, not `broken`.
-  maybeBuildable = v:
-    optionals (isDerivation v && !(v.meta.unsupported or false)) [ v ];
+  maybeBuildable = v: optionals (isDerivation v && !(v.meta.unsupported or false)) [ v ];
 
   # removed packages (like cudatoolkit_6) are just aliases that `throw`:
   notRemoved = pkg: (builtins.tryEval (builtins.seq pkg true)).success;
 
-  isUnfreeRedistributable = licenses:
-    builtins.any (l: (!l.free or true) && (l.redistributable or false)) licenses;
+  isUnfreeRedistributable =
+    licenses: builtins.any (l: (!l.free or true) && (l.redistributable or false)) licenses;
 
-  hasLicense = pkg:
-    pkg ? meta.license;
+  hasLicense = pkg: pkg ? meta.license;
 
-  hasUnfreeRedistributableLicense = pkg:
-    hasLicense pkg &&
-    isUnfreeRedistributable (ensureList pkg.meta.license);
+  hasUnfreeRedistributableLicense =
+    pkg: hasLicense pkg && isUnfreeRedistributable (ensureList pkg.meta.license);
 
   isDerivation = a: a ? type && a.type == "derivation";
 
@@ -60,17 +62,23 @@ rec {
     "tensorrt"
     "tensorrt_8_4_0"
   ];
-  isCuPackage = name: drv:
-    (notRemoved drv)
-    && (isDerivation drv)
-    && (builtins.any (p: hasPrefix p name) cuPrefixae);
-  isSupportedCuPackage = name: drv: (isCuPackage name drv) && !builtins.elem name unsupportedCuPackages;
+  isCuPackage =
+    name: drv:
+    (notRemoved drv) && (isDerivation drv) && (builtins.any (p: hasPrefix p name) cuPrefixae);
+  isSupportedCuPackage =
+    name: drv: (isCuPackage name drv) && !builtins.elem name unsupportedCuPackages;
 
   resultToString = { success, value }: optionalString success value;
 
-  dedupOutpaths = nameDrvPairs:
+  dedupOutpaths =
+    nameDrvPairs:
     let
-      outPathToPair = builtins.groupBy (pair: (builtins.unsafeDiscardStringContext (resultToString (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath))))) nameDrvPairs;
+      outPathToPair = builtins.groupBy (
+        pair:
+        (builtins.unsafeDiscardStringContext (
+          resultToString (builtins.tryEval (builtins.seq pair.value.outPath pair.value.outPath))
+        ))
+      ) nameDrvPairs;
       groupedPairs = builtins.attrValues outPathToPair;
       uniquePairs = builtins.map builtins.head groupedPairs;
     in

@@ -4,6 +4,6 @@
     jobsAttr = "neverBreak";
     reason = "daily pytorch&c build";
     system = "x86_64-linux";
-    when.hour = [3];
+    when.hour = [ 3 ];
   };
 }

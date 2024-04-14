@@ -39,7 +39,7 @@ in
                 List of CUDA capabilities to build for.
                 If empty, the default capabilities are used.
               '';
-              default = [];
+              default = [ ];
               type = types.listOf types.nonEmptyStr;
             };
             forwardCompat = mkOption {
@@ -66,7 +66,8 @@ in
               "aarch64-linux"
             ];
           };
-          when = (import "${inputs.hercules-ci-effects}/flake-modules/types/when.nix" {inherit lib;}).option;
+          when =
+            (import "${inputs.hercules-ci-effects}/flake-modules/types/when.nix" { inherit lib; }).option;
         };
       }
     );
@@ -91,7 +92,7 @@ in
                 allowUnfree = true;
                 cudaSupport = true;
                 cudaEnableForwardCompat = cuda.forwardCompat;
-              } // attrsets.optionalAttrs (cuda.capabilities != []) {cudaCapabilities = cuda.capabilities;};
+              } // attrsets.optionalAttrs (cuda.capabilities != [ ]) { cudaCapabilities = cuda.capabilities; };
             };
           in
           {
@@ -102,10 +103,10 @@ in
       attrsets.mapAttrs (_: mkOnScheduleEntry) config.hci.jobSets;
     onPush.default.outputs = {
       effects = withSystem "x86_64-linux" (
-        {hci-effects, pkgs, ...}:
+        { hci-effects, pkgs, ... }:
         {
           releaseBranch = hci-effects.modularEffect {
-            imports = [../../effects/git-push/effects-fun.nix];
+            imports = [ ../../effects/git-push/effects-fun.nix ];
             git.push = {
               source = {
                 url = "https://github.com/NixOS/nixpkgs.git";

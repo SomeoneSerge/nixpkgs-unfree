@@ -34,7 +34,7 @@ in
     aalto-nixos-unstable-weekly-checks = default // {
       branch = "nixos-unstable";
       jobsAttr = "checks";
-      when.dayOfWeek = ["Sat"];
+      when.dayOfWeek = [ "Sat" ];
     };
   };
 }

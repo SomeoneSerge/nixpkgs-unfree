@@ -24,53 +24,56 @@
   };
 
   nixConfig = {
-    extra-substituters = [
-      "https://cuda-maintainers.cachix.org"
-    ];
+    extra-substituters = [ "https://cuda-maintainers.cachix.org" ];
     extra-trusted-public-keys = [
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
     ];
   };
 
-  outputs = inputs@{ self, flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; }
-      {
-        imports = [
-          inputs.hercules-ci-effects.flakeModule
-          ./nix/ci
-        ];
-        systems = [ "x86_64-linux" ];
-        flake =
-          let
+  outputs =
+    inputs@{ self, flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.hercules-ci-effects.flakeModule
+        ./nix/ci
+      ];
+      systems = [ "x86_64-linux" ];
+      flake =
+        let
 
-            inherit (inputs) nixpkgs;
-            inherit (nixpkgs) lib;
+          inherit (inputs) nixpkgs;
+          inherit (nixpkgs) lib;
 
-            systems = [ "x86_64-linux" ];
+          systems = [ "x86_64-linux" ];
 
-            eachSystem = lib.genAttrs systems;
+          eachSystem = lib.genAttrs systems;
 
-            x = eachSystem (system:
-              import ./nix/jobs.nix {
-                inherit system nixpkgs lib;
-                extraConfig.cudaCapabilities = [ "7.0" "8.0" "8.6" ];
-                extraConfig.cudaEnableForwardCompat = false;
-              }
-            );
-          in
-          {
-            # Inherit from upstream
-            inherit (nixpkgs) lib; # nixosModules htmlDocs;
+          x = eachSystem (
+            system:
+            import ./nix/jobs.nix {
+              inherit system nixpkgs lib;
+              extraConfig.cudaCapabilities = [
+                "7.0"
+                "8.0"
+                "8.6"
+              ];
+              extraConfig.cudaEnableForwardCompat = false;
+            }
+          );
+        in
+        {
+          # Inherit from upstream
+          inherit (nixpkgs) lib; # nixosModules htmlDocs;
 
-            # But replace legacyPackages with the unfree version
-            legacyPackages = eachSystem (system: x.${system}.legacyPackages);
+          # But replace legacyPackages with the unfree version
+          legacyPackages = eachSystem (system: x.${system}.legacyPackages);
 
-            # And load all the unfree+redistributable packages as checks
-            checks = eachSystem (system: x.${system}.neverBreak);
+          # And load all the unfree+redistributable packages as checks
+          checks = eachSystem (system: x.${system}.neverBreak);
 
-            # Expose our own unfree overrides
-            overlays = import ./nix/overlays.nix;
-            overlay = self.overlays.basic;
-          };
-      };
+          # Expose our own unfree overrides
+          overlays = import ./nix/overlays.nix;
+          overlay = self.overlays.basic;
+        };
+    };
 }

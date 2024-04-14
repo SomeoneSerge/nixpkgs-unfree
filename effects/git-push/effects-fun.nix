@@ -1,28 +1,30 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 let
-  inherit (lib)
-    mkOption
-    optionalString
-    types
-    ;
+  inherit (lib) mkOption optionalString types;
 
   cfg = config.git.push;
 
   # Copied from
   # https://github.com/hercules-ci/hercules-ci-effects/blob/15ff4f63e5f28070391a5b09a82f6d5c6cc5c9d0/effects/modules/git-auth.nix#L10-L16
-  parseURL = gitRemote:
-    let m = builtins.match "([a-z]*)://([^/]*)(/?.*)" gitRemote;
+  parseURL =
+    gitRemote:
+    let
+      m = builtins.match "([a-z]*)://([^/]*)(/?.*)" gitRemote;
     in
-    if m == null then throw "Could not parse the git remote as a url. Value: ${gitRemote}" else {
-      scheme = lib.elemAt m 0;
-      host = lib.elemAt m 1;
-      path = lib.elemAt m 2;
-    };
+    if m == null then
+      throw "Could not parse the git remote as a url. Value: ${gitRemote}"
+    else
+      {
+        scheme = lib.elemAt m 0;
+        host = lib.elemAt m 1;
+        path = lib.elemAt m 2;
+      };
 
   source = parseURL cfg.source.url;
   destination = parseURL cfg.destination.url;
@@ -96,9 +98,7 @@ in
     env.HCI_GIT_PUSH_FORCE = optionalString cfg.force "--force";
 
     # Copy-pasted from https://github.com/hercules-ci/hercules-ci-effects/blob/15ff4f63e5f28070391a5b09a82f6d5c6cc5c9d0/effects/modules/git.nix
-    inputs = [
-      pkgs.git
-    ];
+    inputs = [ pkgs.git ];
     env = {
       EMAIL = "hercules-ci[bot]@users.noreply.github.com";
       GIT_AUTHOR_NAME = "Hercules CI Effects";
