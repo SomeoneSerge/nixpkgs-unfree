@@ -18,11 +18,12 @@ let
     }:
     final: prev:
     let
-      inherit (prev.lib) optionalAttrs versionOlder replaceChars;
+      inherit (prev) lib;
+      inherit (lib) optionalAttrs versionOlder replaceChars;
       overrideMpi = !(builtins.isNull mpiProvider);
     in
     (
-      {
+      lib.optionalAttrs (versionOlder lib.version "24.05pre-git") {
         # These ignore config.cudaSupport in some releases
 
         openmpi = prev.openmpi.override {
@@ -30,7 +31,7 @@ let
         };
 
         # https://github.com/NixOS/nixpkgs/issues/239182
-        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: prev.lib.optionalAttrs ((prev.lib.functionArgs pre.cudatoolkit.override) ? ucx) {
+        cudaPackages = prev.cudaPackages.overrideScope' (fin: pre: {
           cudatoolkit = pre.cudatoolkit.override { ucx = final.ucx.override { enableCuda = false; }; };
         });
 
