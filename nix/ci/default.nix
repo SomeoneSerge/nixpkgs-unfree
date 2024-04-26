@@ -89,6 +89,7 @@ in
               inherit system;
               nixpkgs = inputs."nixpkgs-${branch}";
               extraConfig = {
+                allowInsecurePredicate = x: true;
                 allowUnfree = true;
                 cudaSupport = true;
                 cudaEnableForwardCompat = cuda.forwardCompat;
