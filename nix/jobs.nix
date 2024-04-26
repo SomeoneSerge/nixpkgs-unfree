@@ -18,6 +18,7 @@ let
     import nixpkgs ({
       inherit system;
       config = {
+        allowInsecurePredicate = x: true;
         allowUnfree = true;
         cudaSupport = true;
       } // extraConfig;
