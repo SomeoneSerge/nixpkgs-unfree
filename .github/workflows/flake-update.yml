@@ -11,18 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - uses: cachix/install-nix-action@v15
-    - name: configure git
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-    - run: nix flake update
-    - run: |
-        if [[ -n $(git status --porcelain) ]]; then
-          git commit -am "nix flake update"
-          git push origin develop
-        fi
-
+    - name: Update flake.lock
+      uses: DeterminateSystems/update-flake-lock@main
+      with:
+        pr-title: "nix: update flake.lock"
+        pr-labels: |
+          nix
+        pr-reviewers: SomeoneSerge
+        token: ${{ secrets.GIT_PUSH_PAT }}
