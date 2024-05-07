@@ -21,5 +21,4 @@ jobs:
         pr-title: "nix: update flake.lock"
         pr-labels: |
           nix
-        pr-reviewers: SomeoneSerge
         token: ${{ secrets.GIT_PUSH_PAT }}
