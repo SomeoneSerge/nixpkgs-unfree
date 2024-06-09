@@ -14,6 +14,12 @@ With the above in mind, let's proceed.
 
 ## Latest warnings
 
+- 2024-06-09: I had been having issues with the Hercules CI's "effects" queue
+  getting jammed, effectively shutting down the "flake-update" effect. The
+  effects were disabled and replaced with a flake-update github action, which
+  triggers HCI to rebuild the "default" job against the new master. Other jobs
+  may be at times be building stale nixpgs revisions...
+  This is all rather flaky and I haven't had time to debug this.
 - 2023-03-05: Repo no longer tries to be a drop-in substitute for nixpkgs. We
   just build. The flake is now used to track all nixpkgs branches (->
   flake.lock is much larger), and hercules CI's `onSchedule`, rather than a
