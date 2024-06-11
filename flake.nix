@@ -8,8 +8,8 @@
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nixpkgs-nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-release.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs-release-staging.url = "github:NixOS/nixpkgs/staging-23.11";
+    nixpkgs-release.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-release-staging.url = "github:NixOS/nixpkgs/staging-24.05";
     nixpkgs-cuda-updates.url = "github:NixOS/nixpkgs/cuda-updates";
 
     hercules-ci-effects = {
