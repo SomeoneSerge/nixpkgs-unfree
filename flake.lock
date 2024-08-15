@@ -43,29 +43,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-cuda-updates": {
-      "locked": {
-        "lastModified": 1712133680,
-        "narHash": "sha256-tBe7Ivc6GSLHoVVs4nyWV3r3DmCZnPocwKXnQK9nwYM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "a2954dea377e749d9cff5f71f3815330a5907ee9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "cuda-updates",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1723634395,
-        "narHash": "sha256-K1ohl/M/HWXqieqNtsF39FbWqtaNX/mUgulrqcOO1KU=",
+        "lastModified": 1723724544,
+        "narHash": "sha256-Imp9b3YXmVMN17A2RQCdwATd6nE07rkXaNosFY9U+mA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "57d0d4a8f3025e2b902d2b4403bcece26ad1ea74",
+        "rev": "40dc65f56d8586a6bfb40f04ecf13dfff952a4b6",
         "type": "github"
       },
       "original": {
@@ -146,7 +130,6 @@
         "nixpkgs": [
           "nixpkgs-master"
         ],
-        "nixpkgs-cuda-updates": "nixpkgs-cuda-updates",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-nixos-unstable": "nixpkgs-nixos-unstable",
         "nixpkgs-nixpkgs-unstable": "nixpkgs-nixpkgs-unstable",

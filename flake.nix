@@ -10,7 +10,6 @@
     nixpkgs-nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-release.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-release-staging.url = "github:NixOS/nixpkgs/staging-24.05";
-    nixpkgs-cuda-updates.url = "github:NixOS/nixpkgs/cuda-updates";
 
     hercules-ci-effects = {
       url = "github:hercules-ci/hercules-ci-effects";
@@ -32,48 +31,29 @@
 
   outputs =
     inputs@{ self, flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        inputs.hercules-ci-effects.flakeModule
-        ./nix/ci
-      ];
+    let
       systems = [ "x86_64-linux" ];
+      inherit (inputs) nixpkgs;
+      inherit (nixpkgs) lib;
+    in
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      inherit systems;
       flake =
         let
-
-          inherit (inputs) nixpkgs;
-          inherit (nixpkgs) lib;
-
-          systems = [ "x86_64-linux" ];
-
           eachSystem = lib.genAttrs systems;
-
-          x = eachSystem (
-            system:
-            import ./nix/jobs.nix {
-              inherit system nixpkgs lib;
-              extraConfig.cudaCapabilities = [
-                "7.0"
-                "8.0"
-                "8.6"
-              ];
-              extraConfig.cudaEnableForwardCompat = false;
-            }
-          );
+          eachBranch = lib.genAttrs [ "master" ];
         in
         {
-          # Inherit from upstream
-          inherit (nixpkgs) lib; # nixosModules htmlDocs;
-
-          # But replace legacyPackages with the unfree version
-          legacyPackages = eachSystem (system: x.${system}.legacyPackages);
-
-          # And load all the unfree+redistributable packages as checks
-          checks = eachSystem (system: x.${system}.neverBreak);
-
-          # Expose our own unfree overrides
-          overlays = import ./nix/overlays.nix;
-          overlay = self.overlays.basic;
+          herculesCI.onPush.default.outputs = eachSystem (
+            system:
+            (eachBranch (
+              branch:
+              import (inputs.nixpkgs + "/pkgs/top-level/release-cuda.nix") {
+                inherit system;
+                packageSet = import inputs."nixpkgs-${branch}";
+              }
+            ))
+          );
         };
     };
 }
