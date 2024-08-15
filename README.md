@@ -14,6 +14,9 @@ With the above in mind, let's proceed.
 
 ## Latest warnings
 
+- 2024-08-15: As of https://github.com/SomeoneSerge/nixpkgs-cuda-ci/pull/33,
+  this repo no longer maintains any jobsets and consumes instead the new
+  `release-cuda.nix` maintained in Nixpkgs
 - 2024-06-09: I had been having issues with the Hercules CI's "effects" queue
   getting jammed, effectively shutting down the "flake-update" effect. The
   effects were disabled and replaced with a flake-update github action, which
