@@ -4,7 +4,7 @@ This project is discontinued in favour of the [CUDA-enabled Nixpkgs release in-t
 built on the ["community Hydra"](https://hydra.nix-community.org/jobset/nixpkgs/cuda)
 and cached at [nix-community.cachix.org](https://nix-community.org/cache/)
 within the nix-community infrastructure team's [effort](https://github.com/nix-community/infra/pull/1335).
-Nix-Community infrastructure is funded via an [OpenCollective project](https://nix-community.org/open-collective): consider committing for a monthly donation to ensure its continuing availability.
+Nix-Community's infrastructure is funded via an [OpenCollective project](https://nix-community.org/open-collective): consider committing for a monthly donation to ensure its continuing availability.
 
 ---
 
